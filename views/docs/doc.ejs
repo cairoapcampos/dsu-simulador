@@ -1,0 +1,26 @@
+<%- include('../components/page-top', { title: 'Documentação', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar\">' }) %>
+            <h2 class="mb-4 text-center"><i class="fa-solid fa-chalkboard-user"></i> Documentação</h2>
+
+            <div class="card doc-card">
+                <div class="card-body">
+                    <h4 class="doc-section-title"><i class="fa-solid fa-book-open"></i> Conteúdos</h4>
+                    <div class="doc-desc">Materiais teóricos e explicações passo a passo sobre DSU/Union-Find e suas
+                        otimizações.</div>
+
+                    <ul class="list-group mb-0">
+                        <li class="list-group-item">
+                            <a class="doc-link" href="/documentacao/dsu-sem-otimizacoes"><i class="fa-solid fa-file-lines"></i>
+                                Disjoint Set Union (Union-Find) sem Otimizações</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a class="doc-link" href="/documentacao/union-by-size-path-compression"><i class="fa-solid fa-file-lines"></i>
+                                Union by Size + Path Compression</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a class="doc-link" href="/documentacao/union-by-rank-path-compression"><i class="fa-solid fa-file-lines"></i>
+                                Union by Rank + Path Compression</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>

@@ -1,0 +1,1104 @@
+<%- include('../components/page-top', { title: 'Union by Size + Path Compression', bodyClass: 'doc-body', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar doc-page\">' }) %>
+            <div class="mb-3">
+                <a href="/documentacao" class="text-decoration-none"><i class="fa-solid fa-arrow-left"></i>
+                    Voltar para Documentação</a>
+            </div>
+
+            <div class="doc-wrap">
+                <article class="doc-article">
+
+                    <h1>Union by Size + Path Compression</h1>
+
+                    <p>No exemplo sem otimização, pode-se escolher livremente quem virava pai.</p>
+                    <p>Com <strong>Union by Size</strong>, isso <strong>não é mais livre</strong>: o conjunto menor deve ficar abaixo do maior.
+                        Além disso, com <strong>Path Compression</strong>, quando é feito <code>find(x)</code>, os nós visitados passam a apontar
+                        direto para a raiz.</p>
+
+                    <p><strong>Regras Adotadas</strong></p>
+
+                    <p>Considere a Operação:</p>
+
+                    <p><code>union(x, y)</code></p>
+
+                    <p>fazendo:</p>
+
+                    <ul>
+                        <li><code>rx = find(x)</code></li>
+                        <li><code>ry = find(y)</code></li>
+                    </ul>
+
+                    <p>Depois:</p>
+
+                    <ul>
+                        <li>Se <code>size[rx] &lt; size[ry]</code>, então <code>rx</code> fica abaixo de <code>ry</code></li>
+                        <li>Se <code>size[rx] &gt; size[ry]</code>, então <code>ry</code> fica abaixo de <code>rx</code></li>
+                        <li>Em caso de empate, adota-se: <strong>a raiz do primeiro argumento fica abaixo da raiz do segundo</strong></li>
+                    </ul>
+
+                    <p>Ou seja, no empate:</p>
+
+                    <p><code>parent[rx] = ry</code></p>
+
+                    <p><strong>Obs:</strong> Isso é só uma convenção. Outra implementação poderia escolher o contrário.</p>
+
+                    <h2>1. Estado Inicial</h2>
+
+                    <p>Cada nó começa sozinho.</p>
+
+                    <pre><code>
+A   B   C   D   E   F   G   H
+</code></pre>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>1</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>1</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2. Exemplo Completo Simulado</h2>
+
+                    <h2>2.1 union(B, A)</h2>
+
+                    <p>Tem-se:</p>
+
+                    <ul>
+                        <li><code>find(B) = B</code></li>
+                        <li><code>find(A) = A</code></li>
+                    </ul>
+
+                    <p>Os tamanhos são iguais: 1 e 1.</p>
+                    <p>Pela regra de empate, <strong>B fica abaixo de A</strong>.</p>
+
+                    <p>Resultado:</p>
+
+                    <pre><code>
+A
+└── B
+
+C   D   E   F   G   H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li>Conjunto de A agora tem tamanho 2</li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>B</strong></td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td><strong>2</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>1</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2.2 union(D, C)</h2>
+
+                    <ul>
+                        <li><code>find(D) = D</code></li>
+                        <li><code>find(C) = C</code></li>
+                    </ul>
+
+                    <p>Empate de tamanho 1 e 1.</p>
+                    <p>Logo, <strong>D fica abaixo de C</strong>.</p>
+
+                    <pre><code>
+A        C
+└── B    └── D
+
+E   F   G   H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[A] = 2</code></li>
+                        <li><code>size[C] = 2</code></li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td><strong>C</strong></td>
+                                <td><strong>D</strong></td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>2</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td><strong>2</strong></td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>1</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2.3 union(F, E)</h2>
+
+                    <ul>
+                        <li><code>find(F) = F</code></li>
+                        <li><code>find(E) = E</code></li>
+                    </ul>
+
+                    <p>Empate.</p>
+                    <p>Então <strong>F fica abaixo de E</strong>.</p>
+
+                    <pre><code>
+A        C        E
+└── B    └── D    └── F
+
+G   H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[E] = 2</code></li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E</strong></td>
+                                <td><strong>F</strong></td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>2</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td><strong>2</strong></td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>1</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2.4 union(H, G)</h2>
+
+                    <ul>
+                        <li><code>find(H) = H</code></li>
+                        <li><code>find(G) = G</code></li>
+                    </ul>
+
+                    <p>Empate. ---</p>
+                    <p>Então <strong>H fica abaixo de G</strong>.</p>
+
+                    <pre><code>
+A        C        E        G
+└── B    └── D    └── F    └── H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[G] = 2</code></li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td><strong>G</strong></td>
+                                <td><strong>H</strong></td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>2</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td><strong>2</strong></td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>-</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2.5 union(C, A)</h2>
+
+                    <p>Agora tem-se dois conjuntos:</p>
+
+                    <ul>
+                        <li>Conjunto de C: <code>{C, D}</code> com tamanho 2</li>
+                        <li>Conjunto de A: <code>{A, B}</code> com tamanho 2</li>
+                    </ul>
+
+                    <p>Calculando:</p>
+
+                    <ul>
+                        <li><code>find(C) = C</code></li>
+                        <li><code>find(A) = A</code></li>
+                    </ul>
+
+                    <p>Empate de tamanho 2 e 2.</p>
+                    <p>Pela regra de empate, <strong>C fica abaixo de A</strong>.</p>
+
+                    <p>Resultado:</p>
+
+                    <pre><code>
+A
+├── B
+└── C
+    └── D
+
+E
+└── F
+
+G
+└── H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[A] = 4</code></li>
+                    </ul>
+
+                    <p>D ainda aponta para C.</p>
+                    <p>Isso é normal. O <code>find(D)</code> ainda faria:</p>
+
+                    <p><code>D → C → A</code></p>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>C</strong></td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td><strong>4</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>-</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h2>2.6 union(E, A)</h2>
+
+                    <ul>
+                        <li><code>find(A) = A</code>, com tamanho 4</li>
+                        <li><code>find(E) = E</code>, com tamanho 2</li>
+                    </ul>
+
+                    <p>Como o conjunto de A é maior, <strong>o menor deve ficar abaixo do maior</strong>.</p>
+
+                    <p>Então o correto agora é:</p>
+
+                    <p><strong>E fica abaixo de A</strong> e não A abaixo de E.</p>
+
+                    <p>Resultado:</p>
+
+                    <pre><code>
+A
+├── B
+├── C
+│   └── D
+└── E
+    └── F
+
+G
+└── H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[A] = 6</code></li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>E</strong></td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td><strong>6</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>-</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <h1>2.7 union(G, A)</h1>
+
+                    <p>Agora precisa-se tomar cuidado com o <code>find(E)</code>, porque E já não é mais raiz.</p>
+
+                    <p>Tem-se:</p>
+
+                    <ul>
+                        <li><code>E → A</code></li>
+                    </ul>
+
+                    <p>Então:</p>
+
+                    <ul>
+                        <li><code>find(E)</code> percorre <code>E → A</code></li>
+                        <li>raiz de E é <strong>A</strong></li>
+                    </ul>
+
+                    <p>Como há <strong>Path Compression</strong>, depois desse <code>find</code>, E continua apontando diretamente para A, o
+                        que já acontecia.</p>
+
+                    <p>Para G:</p>
+
+                    <ul>
+                        <li><code>find(G) = G</code></li>
+                    </ul>
+
+                    <p>Agora compara-se os tamanhos:</p>
+
+                    <ul>
+                        <li>Raiz A tem tamanho 6</li>
+                        <li>Raiz G tem tamanho 2</li>
+                    </ul>
+
+                    <p>Logo, o menor conjunto fica abaixo do maior:</p>
+
+                    <p><strong>G fica abaixo de A</strong></p>
+
+                    <p>Resultado:</p>
+
+                    <pre><code>
+A
+├── B
+├── C
+│   └── D
+├── E
+│   └── F
+└── G
+    └── H
+</code></pre>
+
+                    <p>Tamanhos:</p>
+
+                    <ul>
+                        <li><code>size[A] = 8</code></li>
+                    </ul>
+
+	                    <p>Tabelas:</p>
+	                    <div class="row g-3 doc-table-pair">
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Parent</th>
+	                                <th>Nó Comum</th>
+	                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>G</strong></td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                        <div class="col-12 col-lg-6">
+	                            <table>
+	                        <thead>
+	                            <tr>
+	                                <th>Conjunto</th>
+	                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td><strong>8</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>-</td>
+	                            </tr>
+	                        </tbody>
+	                            </table>
+	                        </div>
+	                    </div>
+
+                    <p>Observe:</p>
+
+                    <ul>
+                        <li><code>find(D)</code> ainda seria <code>D → C → A</code></li>
+                        <li><code>find(F)</code> ainda seria <code>F → E → A</code></li>
+                        <li><code>find(H)</code> ainda seria <code>H → G → A</code></li>
+                    </ul>
+
+                    <p>Ou seja, a árvore ainda não está totalmente achatada.</p>
+
+                    <h1>3. Onde entra o Path Compression de verdade?</h1>
+
+                    <p>O <strong>Path Compression</strong> aparece quando se faz buscas.</p>
+
+                    <p>Por exemplo, se for feito o seguinte:</p>
+
+                    <ul>
+                        <li><code>find(D)</code></li>
+                        <li><code>find(F)</code></li>
+                        <li><code>find(H)</code></li>
+                    </ul>
+
+                    <p>Então os caminhos são comprimidos.</p>
+
+                    <h2>find(D)</h2>
+
+                    <p>Antes:</p>
+
+                    <p><code>D → C → A</code></p>
+
+                    <p>Depois do <code>find(D)</code>, D passa a apontar direto para A:</p>
+
+                    <p><code>D → A</code></p>
+
+                    <h2>find(F)</h2>
+
+                    <p>Antes:</p>
+
+                    <p><code>F → E → A</code></p>
+
+                    <p>Depois:</p>
+
+                    <p><code>F → A</code></p>
+
+                    <h2>find(H)</h2>
+
+                    <p>Antes:</p>
+
+                    <p><code>H → G → A</code></p>
+
+                    <p>Depois:</p>
+
+                    <p><code>H → A</code></p>
+
+                    <p>Se fizermos essas consultas, a árvore fica bem mais achatada:</p>
+
+                    <pre><code>
+A
+├── B
+├── C
+├── D
+├── E
+├── F
+├── G
+└── H
+</code></pre>
+
+                </article>
+            </div>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>

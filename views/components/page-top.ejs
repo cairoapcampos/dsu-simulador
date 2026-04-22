@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <% const headLocals = { title }; %>
+    <% if (typeof scripts !== 'undefined') headLocals.scripts = scripts; %>
+    <% if (typeof stylesheets !== 'undefined') headLocals.stylesheets = stylesheets; %>
+    <% if (typeof includeFontAwesome !== 'undefined') headLocals.includeFontAwesome = includeFontAwesome; %>
+    <%- include('head', headLocals) %>
+</head>
+
+<body class="<%= (typeof bodyClass !== 'undefined' && bodyClass) ? bodyClass : '' %>">
+    <%- include('sidebar') %>
+    <%- (typeof wrapperOpen !== 'undefined' && wrapperOpen) ? wrapperOpen : '' %>

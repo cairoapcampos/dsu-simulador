@@ -1,0 +1,31 @@
+<%- include('components/page-top', { title: 'Sobre', stylesheets: ['/css/about.css'], wrapperOpen: '<div class=\"container py-4 dsu-container with-sidebar about-container\">' }) %>
+            <h2 class="mb-4 mt-2 text-center"><i class="fa-solid fa-circle-info"></i> Sobre</h2>
+            <p class="lead about-lead">
+                Este projeto foi desenvolvido com o objetivo de facilitar o aprendizado da estrutura de dados Disjoint
+                Set Union (Union-Find) e de suas otimizações: Union by Size, Union by Rank e Path Compression.
+            </p>
+
+            <h2 class="mb-4 mt-5 text-center dsu-title"><i class="fa-solid fa-users"></i> Alunos</h2>
+            <div class="d-flex justify-content-center align-items-end flex-nowrap mb-4 about-students">
+                <div class="text-center">
+                    <img src="/img/alunos/Avatar1.png" alt="Aluno 1" class="rounded-circle shadow-lg about-avatar" width="170"
+                        height="170">
+                    <div class="mt-4 fw-bold">Cairo Ap. Campos</div>
+                </div>
+                <div class="text-center">
+                    <img src="/img/alunos/Avatar2.png" alt="Aluno 2" class="rounded-circle shadow-lg about-avatar" width="170"
+                        height="170">
+                    <div class="mt-4 fw-bold">Davi Gouveia Miranda</div>
+                </div>
+                <div class="text-center">
+                    <img src="/img/alunos/Avatar3.png" alt="Aluno 3" class="rounded-circle shadow-lg about-avatar" width="170"
+                        height="170">
+                    <div class="mt-4 fw-bold">Paulo César Pereira</div>
+                </div>
+                <div class="text-center">
+                    <img src="/img/alunos/Avatar4.png" alt="Aluno 4" class="rounded-circle shadow-lg about-avatar" width="170"
+                        height="170">
+                    <div class="mt-4 fw-bold">Vitor Miranda Souza</div>
+                </div>
+            </div>
+<%- include('components/page-bottom', { wrapperClose: '</div>' }) %>

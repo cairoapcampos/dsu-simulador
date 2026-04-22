@@ -1,0 +1,26 @@
+<div class="sidebar">
+    <ul class="sidebar-list">
+        <li class="mb-1 text-center">
+            <img src="/img/DSU_logo.png" alt="Simulador DSU" class="sidebar-logo" />
+            <div class="sidebar-brand">Simulador</div>
+        </li>
+        <li>
+            <a href="/" class="<%= (url === '/' ? 'active' : '') %>"><i class="fa-solid fa-house"></i> Home</a>
+        </li>
+        <li>
+            <a href="/documentacao"
+                class="<%= (url === '/documentacao' || (url && url.startsWith('/documentacao/')) ? 'active' : '') %>"><i
+                    class="fa-solid fa-chalkboard-user"></i> Documentação</a>
+        </li>
+        <li>
+            <a href="/referencias" class="<%= (url === '/referencias' ? 'active' : '') %>"><i
+                    class="fa-solid fa-book"></i> Referências</a>
+        </li>
+        <li>
+            <a href="/sobre" class="<%= (url === '/sobre' ? 'active' : '') %>"><i
+                    class="fa-solid fa-circle-info"></i>
+                Sobre</a>
+        </li>
+        <!-- Adicione mais itens conforme necessário -->
+    </ul>
+</div>

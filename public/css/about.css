@@ -1,0 +1,22 @@
+.about-container {
+  padding-left: 24px;
+  padding-right: 24px;
+  max-width: 860px;
+}
+
+.about-lead {
+  max-width: 740px;
+  margin: 0 auto 3.5rem auto;
+  text-align: justify;
+  line-height: 1.7;
+  font-size: 1.13em;
+}
+
+.about-students {
+  gap: 3.5rem;
+}
+
+.about-avatar {
+  object-fit: cover;
+  transform: scale(1.12);
+}

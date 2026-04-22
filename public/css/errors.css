@@ -1,0 +1,175 @@
+/* Estilos para páginas de erro (404/500) */
+
+.not-found-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    background: #fafafa;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.not-found-content {
+    width: min(720px, 100%);
+}
+
+.not-found-code {
+    margin: 0 0 16px 0;
+    color: #dc3545;
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.not-found-graph {
+    position: relative;
+    width: min(560px, 100%);
+    height: 220px;
+    margin: 0 auto 24px auto;
+    border: 1px solid #ccc;
+    background: #fff;
+    overflow: hidden;
+}
+
+.graph-node {
+    position: absolute;
+    z-index: 2;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: limegreen;
+    border: 5px solid #111;
+    color: #111;
+    font-size: 1.7rem;
+    font-weight: bold;
+}
+
+.graph-node-home {
+    left: 82px;
+    top: 76px;
+}
+
+.graph-node-lost {
+    right: 82px;
+    top: 76px;
+    background: yellow;
+    border-color: #ff0;
+}
+
+.broken-edge {
+    position: absolute;
+    top: 108px;
+    height: 5px;
+    background: #111;
+    transform-origin: center;
+}
+
+.broken-edge-left {
+    left: 148px;
+    width: 128px;
+    transform: rotate(-8deg);
+}
+
+.broken-edge-right {
+    right: 148px;
+    width: 128px;
+    transform: rotate(8deg);
+}
+
+.broken-edge-left::after,
+.broken-edge-right::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+.broken-edge-left::after {
+    right: -2px;
+    border-left: 16px solid #111;
+}
+
+.broken-edge-right::after {
+    left: -2px;
+    border-right: 16px solid #111;
+}
+
+.graph-break {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 3px solid #dc3545;
+    border-radius: 50%;
+    color: #dc3545;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.not-found-content h1 {
+    margin: 0 0 12px 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.not-found-message {
+    margin: 0 auto 8px auto;
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+}
+
+.not-found-hint {
+    margin: 0 auto 24px auto;
+    max-width: 560px;
+    font-size: 1rem;
+}
+
+.not-found-action {
+    min-width: 220px;
+}
+
+@media (max-width: 640px) {
+    .not-found-graph {
+        height: 190px;
+    }
+    .graph-node {
+        width: 58px;
+        height: 58px;
+        font-size: 1.4rem;
+    }
+    .graph-node-home {
+        left: 34px;
+        top: 66px;
+    }
+    .graph-node-lost {
+        right: 34px;
+        top: 66px;
+    }
+    .broken-edge {
+        top: 94px;
+    }
+    .broken-edge-left {
+        left: 90px;
+        width: calc(50% - 128px);
+    }
+    .broken-edge-right {
+        right: 90px;
+        width: calc(50% - 128px);
+    }
+}

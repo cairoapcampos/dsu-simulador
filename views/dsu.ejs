@@ -1,0 +1,64 @@
+<%- include('components/page-top', { title: 'Disjoint Set Union (Union-Find)', scripts: ['/vendor/cytoscape/cytoscape.min.js'], stylesheets: ['/css/dsu.css'], wrapperOpen: '<div class=\"container py-4 dsu-container with-sidebar\">' }) %>
+            <div class="d-flex align-items-center justify-content-center mb-4 position-relative dsu-header">
+                <h2 class="mb-0 dsu-title d-flex align-items-center justify-content-center text-center">
+                    <strong>Disjoint Set Union (Union-Find)</strong>
+                </h2>
+            </div>
+            <div class="d-flex flex-column align-items-center mb-4 dsu-controls">
+                <div class="mb-2 d-flex justify-content-center align-items-center mode-row">
+                    <label for="dsuMode" class="control-label">Modo:</label>
+                    <select id="dsuMode" class="form-select d-inline-block text-center dsu-mode-select">
+                        <option value="naive" selected>Modo Ingênuo (Sem Otimizações)</option>
+                        <option value="sizepc">Union by Size + Path Compression</option>
+                        <option value="rankpc">Union by Rank + Path Compression</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center gap-2" id="buttonContainer">
+                    <button id="prevBtn" class="btn btn-primary">Passo Anterior</button>
+                    <button id="stepBtn" class="btn btn-primary">Próximo Passo</button>
+                    <button id="resetBtn" class="btn btn-danger">Resetar</button>
+                    <button id="fullscreenBtn" class="btn btn-dark">Tela Cheia</button>
+                </div>
+                <div id="findBox" class="d-none justify-content-center align-items-center mb-3 find-box">
+                    <label for="findInput" class="control-label">Buscar (find):</label>
+                    <select id="findInput" class="form-select text-center find-input">
+                        <option value="0">a</option>
+                        <option value="1">b</option>
+                        <option value="2">c</option>
+                        <option value="3">d</option>
+                        <option value="4">e</option>
+                        <option value="5">f</option>
+                        <option value="6">g</option>
+                        <option value="7">h</option>
+                    </select>
+                    <button id="findBtn" class="btn btn-success">Buscar</button>
+                    <button id="pcPrevBtn" class="btn btn-secondary" title="Passo Anterior" disabled>◀</button>
+                    <button id="pcNextBtn" class="btn btn-secondary" title="Próximo Passo" disabled>▶</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-start mb-4 dsu-main-wrap">
+                <div class="dsu-main">
+                    <div id="cy" class="mb-2"></div>
+                    <div id="legenda-abaixo">
+                        <div class="legend-row">
+                            <span class="legend-title">Legenda:</span>
+                            <span class="legend-item">
+                                <span class="legend-node legend-root"></span>
+                                <span>Nó Raiz/Parent</span>
+                            </span>
+                            <span class="legend-item">
+                                <span class="legend-node"></span>
+                                <span>Nós Comuns</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="status-title">Status/Passos:</div>
+                    <div class="status-tables-wrap">
+                        <div id="status"></div>
+                        <div id="status-parent-size"></div>
+                    </div>
+                    <div id="explicacao-passo"></div>
+                </div>
+            </div>
+        <script type="module" src="/js/dsu-controller.js"></script>
+<%- include('components/page-bottom', { wrapperClose: '</div>' }) %>

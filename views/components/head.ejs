@@ -1,0 +1,14 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/base.css">
+<% if (typeof includeFontAwesome === 'undefined' || includeFontAwesome !== false) { %>
+    <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
+<% } %>
+<% if (typeof stylesheets !== 'undefined' && Array.isArray(stylesheets)) { stylesheets.forEach((href) => { %>
+    <link rel="stylesheet" href="<%= href %>">
+<% }) } %>
+<% if (typeof scripts !== 'undefined' && Array.isArray(scripts)) { scripts.forEach((src) => { %>
+    <script src="<%= src %>"></script>
+<% }) } %>

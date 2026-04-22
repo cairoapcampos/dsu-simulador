@@ -1,0 +1,28 @@
+<%- include('components/page-top', { title: 'Erro interno', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar\">' }) %>
+    <div class="card doc-card">
+        <div class="card-body">
+            <h4 class="doc-section-title">Erro interno do servidor (500)</h4>
+            <p class="doc-desc mb-3">Ocorreu um erro inesperado ao processar sua requisição.</p>
+
+            <div class="alert alert-secondary mb-3" role="alert">
+                Caminho: <strong><%= url %></strong>
+            </div>
+
+            <% if (errorMessage) { %>
+                <p class="mb-2"><strong>Detalhes:</strong> <%= errorMessage %></p>
+            <% } %>
+
+            <% if (showStack && errorStack) { %>
+                <details class="mt-3">
+                    <summary>Stack trace</summary>
+                    <pre class="mt-2"><code><%= errorStack %></code></pre>
+                </details>
+            <% } %>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-primary" href="/">Voltar para a página inicial</a>
+                <a class="btn btn-outline-primary" href="/documentacao">Ir para Documentação</a>
+            </div>
+        </div>
+    </div>
+<%- include('components/page-bottom', { wrapperClose: '</div>' }) %>

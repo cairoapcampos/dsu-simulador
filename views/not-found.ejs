@@ -1,0 +1,27 @@
+<%- include('components/page-top', { title: 'Página não encontrada', stylesheets: ['/css/errors.css'], wrapperOpen: '<main class=\"not-found-page with-sidebar\">' }) %>
+            <section class="not-found-content">
+                <p class="not-found-code">404</p>
+                <div class="not-found-graph" aria-hidden="true">
+                    <span class="broken-edge broken-edge-left"></span>
+                    <span class="broken-edge broken-edge-right"></span>
+                    <span class="graph-node graph-node-home">/</span>
+                    <span class="graph-node graph-node-lost">?</span>
+                    <span class="graph-break">X</span>
+                </div>
+                <h1>Página não encontrada</h1>
+                <p class="not-found-message">
+                    O caminho <strong>
+                        <%= url %>
+                    </strong> ficou fora do conjunto principal.
+                </p>
+                <p class="not-found-hint">
+                    A conexão com a página inicial foi preservada para você voltar à visualização.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <% if (url && url.startsWith('/documentacao/')) { %>
+                        <a class="btn btn-outline-primary" href="/documentacao">Voltar para Documentação</a>
+                    <% } %>
+                    <a class="btn btn-primary not-found-action" href="/">Voltar para a página inicial</a>
+                </div>
+            </section>
+<%- include('components/page-bottom', { wrapperClose: '</main>' }) %>

@@ -1,0 +1,811 @@
+<%- include('../components/page-top', { title: 'Disjoint Set Union (Union-Find) sem Otimizações', bodyClass: 'doc-body', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar doc-page\">' }) %>
+            <div class="mb-3">
+                <a href="/documentacao" class="text-decoration-none"><i class="fa-solid fa-arrow-left"></i>
+                    Voltar para Documentação</a>
+            </div>
+
+            <div class="doc-wrap">
+                <article class="doc-article">
+
+                    <h1>Disjoint Set Union (Union-Find) sem Otimizações</h1>
+
+                    <p>A estrutura de dados <strong>Disjoint Set Union (DSU)</strong>, também chamado de <strong>Union-Find</strong>,
+                        ao operar tem o objetivo de responder duas perguntas:</p>
+
+                    <p><strong>1. Dois elementos estão no mesmo conjunto?</strong></p>
+                    <p><strong>2. Como juntar dois conjuntos?</strong></p>
+
+                    <p>Ela faz isso representando cada conjunto como uma <strong>árvore</strong>. No começo, tem-se várias árvores pequenas;
+                        à medida que são feitas uniões, essas árvores vão sendo conectadas.</p>
+
+                    <h2>1. Estado inicial</h2>
+
+                    <p>Temo-se os nós:</p>
+
+                    <p><code>A, B, C, D, E, F, G, H</code></p>
+
+                    <p>No início, cada nó está sozinho no seu próprio conjunto. Portanto, temos 8 conjuntos distintos:</p>
+
+                    <p><code>{A} {B} {C} {D} {E} {F} {G} {H}</code></p>
+
+                    <p>Pode-se imaginar esse estado inicial assim:</p>
+
+                    <pre><code>
+A   B   C   D   E   F   G   H
+</code></pre>
+
+                    <p>Ou, em forma de tabela de pais:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Quando o pai (parent) de um nó é ele mesmo, isso significa que ele é a <strong>raiz</strong> do conjunto.</p>
+
+                    <h2>2. Operações básicas da DSU</h2>
+
+                    <p>Na versão simples da DSU, sem otimizações, trabalha-se principalmente com três ideias.</p>
+
+                    <h3>make_set(x)</h3>
+
+                    <p>Cria um conjunto contendo apenas o elemento <code>x</code>.</p>
+
+                    <p>No começo, isso é feito para todos os nós:</p>
+
+                    <ul>
+                        <li><code>make_set(A)</code></li>
+                        <li><code>make_set(B)</code></li>
+                        <li><code>make_set(C)</code></li>
+                        <li><code>make_set(D)</code></li>
+                        <li><code>make_set(E)</code></li>
+                        <li><code>make_set(F)</code></li>
+                        <li><code>make_set(G)</code></li>
+                        <li><code>make_set(H)</code></li>
+                    </ul>
+
+                    <h3>find(x)</h3>
+
+                    <p>Encontra o <strong>representante</strong> do conjunto ao qual <code>x</code> pertence.</p>
+
+                    <p>Esse representante é, normalmente, a <strong>raiz da árvore</strong>.</p>
+
+                    <h3>union(x, y)</h3>
+
+                    <p>Junta o conjunto de <code>x</code> com o conjunto de <code>y</code>.</p>
+
+                    <p>Para isso, a ideia correta é:</p>
+
+                    <p>1. descobrir a raiz de <code>x</code></p>
+                    <p>2. descobrir a raiz de <code>y</code></p>
+                    <p>3. fazer uma raiz apontar para a outra</p>
+
+                    <p>Como se está considerando a DSU <strong>sem otimizações</strong>, a escolha de qual raiz ficará acima pode ser feita
+                        arbitrariamente, desde que a estrutura continue sendo uma árvore e não forme ciclos.</p>
+
+                    <h2>3. Ideia geral da estrutura</h2>
+
+                    <p>A DSU armazena conjuntos disjuntos usando uma <strong>floresta de árvores</strong>.</p>
+
+                    <p>Por exemplo, um conjunto pode ser representado assim:</p>
+
+                    <pre><code>
+A
+├── B
+└── C
+    └── D
+</code></pre>
+
+                    <p>Nesse caso:</p>
+
+                    <ul>
+                        <li><code>A</code> é a raiz</li>
+                        <li><code>B</code> aponta para <code>A</code></li>
+                        <li><code>C</code> aponta para <code>A</code></li>
+                        <li><code>D</code> aponta para <code>C</code></li>
+                    </ul>
+
+                    <p>Então:</p>
+
+                    <ul>
+                        <li><code>find(B)</code> percorre <code>B → A</code></li>
+                        <li><code>find(C)</code> percorre <code>C → A</code></li>
+                        <li><code>find(D)</code> percorre <code>D → C → A</code></li>
+                    </ul>
+
+                    <p>Todos chegam em <code>A</code>, então pertencem ao mesmo conjunto.</p>
+
+                    <h2>4. Exemplo Completo Simulado</h2>
+
+                    <p>Agora como exemplo, será construído a estrutura passo a passo, seguindo a sequência de ligações:</p>
+
+                    <ul>
+                        <li><strong>B → A</strong></li>
+                        <li><strong>D → C</strong></li>
+                        <li><strong>F → E</strong></li>
+                        <li><strong>H → G</strong></li>
+                        <li><strong>C → A</strong></li>
+                        <li><strong>A → E</strong></li>
+                        <li><strong>E → G</strong></li>
+                    </ul>
+
+                    <p>Aqui, a seta <code>X → Y</code> significa: <strong>O pai de X passa a ser Y</strong>.</p>
+
+                    <h2>4.1 union(B, A)</h2>
+
+                    <p>União: <strong>B → A</strong></p>
+
+                    <p>Então A continua sendo raiz, e B passa a depender de A.</p>
+
+                    <pre><code>
+A
+└── B
+
+C   D   E   F   G   H
+</code></pre>
+
+                    <p>Tabela de pais:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>B</strong></td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B} {C} {D} {E} {F} {G} {H}</code></p>
+
+                    <h2>4.2 union(D, C)</h2>
+
+                    <p>União: <strong>D → C</strong></p>
+
+                    <pre><code>
+A        C
+└── B    └── D
+
+E   F   G   H
+</code></pre>
+
+                    <p>Tabela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td><strong>C</strong></td>
+                                <td><strong>D</strong></td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B} {C,D} {E} {F} {G} {H}</code></p>
+
+                    <h2>4.3 union(F, E)</h2>
+
+                    <p>União: <strong>F → E</strong></p>
+
+                    <pre><code>
+A        C        E
+└── B    └── D    └── F
+
+G   H
+</code></pre>
+
+                    <p>Tabela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E</strong></td>
+                                <td><strong>F</strong></td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>H</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B} {C,D} {E,F} {G} {H}</code></p>
+
+                    <h2>4.4 union(H, G)</h2>
+
+                    <p>União: <strong>H → G</strong></p>
+
+                    <pre><code>
+A        C        E        G
+└── B    └── D    └── F    └── H
+</code></pre>
+
+                    <p>Tabela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td><strong>G</strong></td>
+                                <td><strong>H</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B} {C,D} {E,F} {G,H}</code></p>
+
+                    <p>Até aqui, temos quatro árvores separadas.</p>
+
+                    <h2>4.5 union(C, A)</h2>
+
+                    <p>Agora a união é feita para unir conjuntos que já possuem mais de um elemento.</p>
+
+                    <p>Tem-se:</p>
+
+                    <ul>
+                        <li><code>B</code> ligado a <code>A</code></li>
+                        <li><code>D</code> ligado a <code>C</code></li>
+                    </ul>
+
+                    <p>Ao fazer:</p>
+
+                    <p><strong>C → A</strong></p>
+
+                    <p>Coloca-se a árvore cuja raiz era <code>C</code> abaixo de <code>A</code>.</p>
+
+                    <p>Antes:</p>
+
+                    <pre><code>
+A        C
+└── B    └── D
+</code></pre>
+
+                    <p>Depois:</p>
+
+                    <pre><code>
+A
+├── B
+└── C
+    └── D
+
+E
+└── F
+
+G
+└── H
+</code></pre>
+
+                    <p>Tabela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td><strong>A</strong></td>
+                                <td><strong>C</strong></td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B,C,D} {E,F} {G,H}</code></p>
+
+                    <p><strong>Obs</strong>: Um detalhe importante é que <code>D</code> continua apontando para <code>C</code>. Como
+                        <code>C</code> agora aponta para <code>A</code>, o caminho de <code>D</code> até a raiz fica:</p>
+
+                    <p><code>D → C → A</code></p>
+
+                    <p>Logo, <code>find(D) = A</code>.</p>
+
+                    <h2>4.6 union(A, E)</h2>
+
+                    <p>Agora a união é:</p>
+
+                    <p><strong>A → E</strong></p>
+
+                    <p>Isso significa que a árvore cuja raiz era <code>A</code> passa a ficar ligada em <code>E</code>.</p>
+
+                    <p>Antes:</p>
+
+                    <pre><code>
+A
+├── B
+└── C
+    └── D
+
+E
+└── F
+</code></pre>
+
+                    <p>Depois:</p>
+
+                    <pre><code>
+E
+├── F
+└── A
+    ├── B
+    └── C
+        └── D
+
+G
+└── H
+</code></pre>
+
+                    <p>Tabela:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>E</strong></td>
+                                <td><strong>A</strong></td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>E</td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Conjuntos atuais:</p>
+
+                    <p><code>{A,B,C,D,E,F} {G,H}</code></p>
+
+                    <p>Agora alguns caminhos até a raiz ficam assim:</p>
+
+                    <ul>
+                        <li><code>find(B) = B → A → E</code></li>
+                        <li><code>find(D) = D → C → A → E</code></li>
+                        <li><code>find(F) = F → E</code></li>
+                    </ul>
+
+                    <p>Todos esses nós já pertencem ao mesmo conjunto, cuja raiz é <code>E</code>.</p>
+
+                    <h2>4.7 union(E, G)</h2>
+
+                    <p>Por fim, é feita a união seguinte:</p>
+
+                    <p><strong>E → G</strong></p>
+
+                    <p>Então toda a árvore cuja raiz era <code>E</code> passa a ficar abaixo de <code>G</code>.</p>
+
+                    <p>Antes:</p>
+
+                    <pre><code>
+E
+├── F
+└── A
+    ├── B
+    └── C
+        └── D
+
+G
+└── H
+</code></pre>
+
+                    <p>Depois:</p>
+
+                    <pre><code>
+G
+├── H
+└── E
+    ├── F
+    └── A
+        ├── B
+        └── C
+            └── D
+</code></pre>
+
+                    <p>Tabela final:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parent</th>
+                                <th>Nó Comum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>E</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>B</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>D</td>
+                            </tr>
+                            <tr>
+                                <td><strong>G</strong></td>
+                                <td><strong>E</strong></td>
+                            </tr>
+                            <tr>
+                                <td>E</td>
+                                <td>F</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>G</td>
+                            </tr>
+                            <tr>
+                                <td>G</td>
+                                <td>H</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Agora todos pertencem ao mesmo conjunto:</p>
+
+                    <p><code>{A,B,C,D,E,F,G,H}</code></p>
+
+                    <h2>5. Como funciona o <code>find</code> na prática</h2>
+
+                    <p>No estado final, a raiz do conjunto é <strong>G</strong>. Alguns exemplos:</p>
+
+                    <ul>
+                        <li><code>find(B)</code></li>
+                    </ul>
+
+                    <p>Percurso:</p>
+
+                    <p><code>B → A → E → G</code></p>
+
+                    <p>Logo, a raiz é <code>G</code>.</p>
+
+                    <ul>
+                        <li><code>find(D)</code></li>
+                    </ul>
+
+                    <p>Percurso:</p>
+
+                    <p><code>D → C → A → E → G</code></p>
+
+                    <p>Logo, a raiz é <code>G</code>.</p>
+
+                    <ul>
+                        <li><code>find(F)</code></li>
+                    </ul>
+
+                    <p>Percurso:</p>
+
+                    <p><code>F → E → G</code></p>
+
+                    <p>Logo, a raiz é <code>G</code>.</p>
+
+                    <ul>
+                        <li><code>find(H)</code></li>
+                    </ul>
+
+                    <p>Percurso:</p>
+
+                    <p><code>H → G</code></p>
+
+                    <p>Logo, a raiz é <code>G</code>.</p>
+
+                    <p>Como todos esses elementos chegam em <code>G</code>, todos estão no mesmo conjunto.</p>
+
+                    <h2>6. Como saber se dois nós estão no mesmo conjunto</h2>
+
+                    <p>Basta comparar os representantes.</p>
+
+                    <p>Por exemplo:</p>
+
+                    <h3><code>A</code> e <code>D</code></h3>
+
+                    <ul>
+                        <li><code>find(A) = G</code></li>
+                        <li><code>find(D) = G</code></li>
+                    </ul>
+
+                    <p>Então <code>A</code> e <code>D</code> estão no mesmo conjunto.</p>
+
+                    <h3><code>F</code> e <code>H</code></h3>
+
+                    <ul>
+                        <li><code>find(F) = G</code></li>
+                        <li><code>find(H) = G</code></li>
+                    </ul>
+
+                    <p>Também estão no mesmo conjunto.</p>
+
+                    <p>A regra geral é: <strong>se dois elementos chegam à mesma raiz, então pertencem ao mesmo conjunto.</strong></p>
+
+                    <h2>7. Por que esta Estrutura de Dados se chama “Disjoint Set”?</h2>
+
+                    <p>O nome vem do fato de os conjuntos serem <strong>disjuntos</strong>, isto é, <strong>não se sobreporem</strong>.</p>
+
+                    <p>Um elemento não pode estar em dois conjuntos diferentes ao mesmo tempo.</p>
+
+                    <p>Exemplo válido:</p>
+
+                    <p><code>{A,B,C,D}</code> e <code>{E,F,G,H}</code></p>
+
+                    <p>Exemplo inválido:</p>
+
+                    <p><code>{A,B,C}</code> e <code>{C,D,E}</code></p>
+
+                    <p>Esse segundo caso é inválido porque <code>C</code> aparece em dois conjuntos ao mesmo tempo.</p>
+
+                    <h2>8. O que acontece sem otimizações</h2>
+
+                    <p>Sem otimizações, a árvore pode ficar mais profunda.</p>
+
+                    <p>No exemplo final, por exemplo, o caminho de <code>D</code> até a raiz é:</p>
+
+                    <p><code>D → C → A → E → G</code></p>
+
+                    <p>Isso significa que <code>find(D)</code> precisa subir vários níveis até chegar à raiz.</p>
+
+                    <p>Se a árvore continuar crescendo de forma ruim, pode-se acabar com algo como:</p>
+
+                    <pre><code>
+A
+└── B
+    └── C
+        └── D
+            └── E
+                └── F
+                    └── G
+                        └── H
+</code></pre>
+
+                    <p>Nesse cenário, <code>find(H)</code> teria que percorrer:</p>
+
+                    <p><code>H → G → F → E → D → C → B → A</code></p>
+
+                    <p>Esse é justamente o motivo pelo qual existem otimizações como:</p>
+
+                    <ul>
+                        <li><strong>Path Compression</strong></li>
+                        <li><strong>Union by Rank</strong></li>
+                        <li><strong>Union by Size</strong></li>
+                    </ul>
+
+                </article>
+            </div>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>

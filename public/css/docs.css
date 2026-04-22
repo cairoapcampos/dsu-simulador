@@ -1,0 +1,208 @@
+.doc-body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f8fb;
+  color: #1f2937;
+  line-height: 1.7;
+}
+
+.doc-page {
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+  --line: #dbe3ee;
+  --accent: #1d4ed8;
+  --accent-soft: #eff6ff;
+  --code: #0f172a;
+}
+
+.doc-page * {
+  box-sizing: border-box;
+}
+
+.doc-wrap {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.doc-article {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.doc-article h1,
+.doc-article h2,
+.doc-article h3 {
+  line-height: 1.25;
+  color: #111827;
+  margin-top: 1.5em;
+  text-align: left;
+}
+
+.doc-article h1 {
+  margin-top: 0;
+  font-size: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--accent);
+}
+
+.doc-article h2 {
+  font-size: 1.45rem;
+  margin-top: 2rem;
+  padding-left: 0.75rem;
+  border-left: 5px solid var(--accent);
+}
+
+.doc-article h3 {
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.doc-article p {
+  margin: 1em 0;
+}
+
+.doc-article ul,
+.doc-article ol {
+  padding-left: 1.5rem;
+}
+
+.doc-article li {
+  margin: 0.35rem 0;
+}
+
+.doc-article code {
+  font-family: "Courier New", Courier, monospace;
+  background: #f3f4f6;
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+  color: var(--code);
+}
+
+.doc-article pre {
+  background: #0b1220;
+  color: #e5eefc;
+  padding: 18px 20px;
+  border-radius: 12px;
+  overflow: auto;
+  border: 1px solid #1e293b;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+}
+
+.doc-article pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.doc-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.doc-article th,
+.doc-article td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.8rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc-article th {
+  background: var(--accent-soft);
+  color: #1e3a8a;
+}
+
+.doc-article tr:last-child td {
+  border-bottom: none;
+}
+
+.doc-article blockquote {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  background: #f8fafc;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+}
+
+.doc-article hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+
+.doc-table-pair {
+  margin: 1rem 0 1.5rem;
+}
+
+.doc-table-pair table {
+  margin: 0;
+}
+
+.doc-card {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+}
+
+.doc-section-title {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.7em;
+}
+
+.doc-link i {
+  margin-right: 0.5em;
+}
+
+.doc-link {
+  transition: background 0.2s, color 0.2s;
+  border-radius: 6px;
+  padding: 0.2em 0.5em;
+  display: inline-block;
+}
+
+.doc-link:focus,
+.doc-link:hover {
+  background: #e3f2fd;
+  color: #0d6efd;
+  outline: none;
+  text-decoration: underline;
+}
+
+.doc-desc {
+  font-size: 0.97em;
+  color: #555;
+  margin-bottom: 0.7em;
+}
+
+.doc-divider {
+  border-top: 2px dashed #b3c6e0;
+  margin: 2rem 0 1.5rem 0;
+}
+
+/* Referências: créditos do embed do SoundCloud */
+.sc-embed-meta {
+  font-size: 10px;
+  color: #cccccc;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sc-embed-meta a {
+  color: #cccccc;
+  text-decoration: none;
+}
