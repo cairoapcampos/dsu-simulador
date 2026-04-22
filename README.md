@@ -139,3 +139,19 @@ http://localhost:3000
 |---|---|
 | `npm start` | Inicia o servidor Express |
 | `npm run dev` | Inicia com auto-reload via nodemon |
+
+## Deploy gratuito (Vercel) sem GitHub
+
+Este projeto já está configurado para Vercel (arquivos `vercel.json` e `api/index.js`).
+
+```bash
+npm i -g vercel
+vercel login
+vercel
+```
+
+Para publicar em produção:
+
+```bash
+vercel --prod
+```

@@ -86,8 +86,12 @@ const onListen = () => {
   console.log(`Servidor rodando em ${logUrl}`);
 };
 
-if (HOST) {
-  app.listen(PORT, HOST, onListen);
-} else {
-  app.listen(PORT, onListen);
+module.exports = app;
+
+if (require.main === module) {
+  if (HOST) {
+    app.listen(PORT, HOST, onListen);
+  } else {
+    app.listen(PORT, onListen);
+  }
 }
