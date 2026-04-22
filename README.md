@@ -1,4 +1,4 @@
-# Visualizador de Disjoint Set Union
+# Simulador DSU
 
 Aplicação Web educacional para visualizar, passo a passo, o funcionamento da estrutura de dados **Disjoint Set Union (DSU)**, também conhecida como **Union-Find**.
 
