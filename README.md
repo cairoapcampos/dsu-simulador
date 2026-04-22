@@ -6,7 +6,7 @@ O projeto mostra como os conjuntos são unidos, como o vetor `parent` é atualiz
 
 ![Demonstração do sistema](docs/imagem.png)
 
-Link do vídeo de demostração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
+Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 
 ## Estrutura
 
