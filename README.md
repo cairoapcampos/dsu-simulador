@@ -4,11 +4,9 @@ Aplicação Web educacional para visualizar, passo a passo, o funcionamento da e
 
 O projeto mostra como os conjuntos são unidos, como o vetor `parent` é atualizado e como a operação `find` atua nos modos com **Path Compression**.
 
-## Vídeo (demonstração)
-
 ![Demonstração do sistema](docs/imagem.png)
 
-<a href="https://www.youtube.com/watch?v=Roj-6bYSoOY" target="_blank" rel="noopener noreferrer">Assista ao vídeo no YouTube</a>
+Link do vídeo de demostração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 
 ## Estrutura
 
