@@ -93,6 +93,36 @@ body {
     margin-bottom: 1.2em;
 }
 
+.sidebar-list li.sidebar-footer {
+    margin-top: auto;
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6px;
+}
+
+.sidebar-footer-logo {
+    display: block;
+    width: 100%;
+    max-width: 175px;
+    height: 74px;
+    object-fit: contain;
+    opacity: 0.9;
+    margin-bottom: 6px;
+}
+
+.sidebar-footer-text {
+    margin-top: 0;
+    text-align: center;
+    color: #222;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.15;
+    max-width: 200px;
+}
+
 /* Ajuste do container principal para centralizar com sidebar */
 .with-sidebar {
     margin-left: 220px;
