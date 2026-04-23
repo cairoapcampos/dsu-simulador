@@ -14,6 +14,54 @@
                         Além disso, com <strong>Path Compression</strong>, quando é feito <code>find(x)</code>, os nós visitados passam a apontar
                         direto para a raiz.</p>
 
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong>Union by Size:</strong> liga a raiz do conjunto menor na raiz do conjunto maior.</li>
+                        <li><strong>size[raiz]:</strong> armazena a quantidade de elementos do conjunto (apenas nas raízes).</li>
+                        <li><strong>Path Compression:</strong> achata caminhos durante <code>find</code>, acelerando buscas futuras.</li>
+                    </ul>
+
+                    <h2>1. Algoritmos (pseudocódigo)</h2>
+
+                    <pre><code>
+make_set(x):
+  parent[x] = x
+  size[x] = 1
+
+find(x):  // com path compression
+  se parent[x] != x:
+    parent[x] = find(parent[x])
+  retorna parent[x]
+
+union(x, y):  // union by size
+  rx = find(x)
+  ry = find(y)
+  se rx == ry: retorna
+  se size[rx] &lt; size[ry]:
+    parent[rx] = ry
+    size[ry] += size[rx]
+  senão:
+    parent[ry] = rx
+    size[rx] += size[ry]
+</code></pre>
+
+                    <h2>2. Complexidade (visão geral)</h2>
+
+                    <p><strong>Sem Path Compression:</strong> usando apenas Union by Size, a altura da árvore fica limitada por <code>O(log n)</code>,
+                        então um <code>find</code> tem custo <code>O(log n)</code> no pior caso (e o <code>union</code> também, pois faz dois <code>find</code>).</p>
+
+                    <p>Com Union by Size + Path Compression, o custo por operação é <code>O(&alpha;(n))</code> amortizado,
+                        onde <code>&alpha;(n)</code> é a função inversa de Ackermann (cresce extremamente devagar).</p>
+
+                    <h2>3. O que observar no simulador</h2>
+
+                    <ul>
+                        <li>A tabela extra mostra <code>size</code> apenas nas <strong>raízes</strong> (nos demais nós aparece <code>-</code>).</li>
+                        <li>Ao usar <code>Buscar (find)</code>, veja quais nós passam a apontar direto para a raiz (compressão de caminho).</li>
+                        <li>Compare os caminhos de <code>find</code> antes/depois: a tendência é reduzir a altura da árvore.</li>
+                    </ul>
+
                     <p><strong>Regras Adotadas</strong></p>
 
                     <p>Considere a Operação:</p>

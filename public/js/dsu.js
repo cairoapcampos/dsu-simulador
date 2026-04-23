@@ -237,3 +237,31 @@ Object.assign(DisjointSetUnionBySizePathCompression.prototype, PathCompression);
  */
 export class DisjointSetUnionByRankPathCompression extends DisjointSetUnionByRank { }
 Object.assign(DisjointSetUnionByRankPathCompression.prototype, PathCompression);
+
+/**
+ * DSU com apenas Path Compression (sem Union by Size/Rank)
+ */
+export class DisjointSetUnionPathCompression extends DisjointSetUnion {
+    /**
+     * Find sem compressão de caminho (uso didático no union).
+     * @param {number} x
+     * @returns {number}
+     */
+    findNoCompression(x) {
+        while (this.parent[x] !== x) x = this.parent[x];
+        return x;
+    }
+
+    /**
+     * União ingênua sem disparar compressão de caminho.
+     * (A compressão fica visível apenas quando o usuário executa find.)
+     * @param {number} u
+     * @param {number} v
+     */
+    union(u, v) {
+        u = this.findNoCompression(u);
+        v = this.findNoCompression(v);
+        if (u !== v) this.parent[v] = u;
+    }
+}
+Object.assign(DisjointSetUnionPathCompression.prototype, PathCompression);

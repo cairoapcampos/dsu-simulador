@@ -13,6 +13,55 @@
                             Rank</strong> não olha o número de elementos do conjunto. Ela olha o <strong>rank</strong>, que representa uma
                         estimativa da altura da árvore.</p>
 
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong>Union by Rank:</strong> liga a raiz com menor rank na raiz com maior rank.</li>
+                        <li><strong>rank[raiz]:</strong> aproxima a altura; só aumenta quando duas raízes com mesmo rank são unidas.</li>
+                        <li><strong>Path Compression:</strong> achata caminhos durante <code>find</code>, acelerando buscas futuras.</li>
+                    </ul>
+
+                    <h2>1. Algoritmos (pseudocódigo)</h2>
+
+                    <pre><code>
+make_set(x):
+  parent[x] = x
+  rank[x] = 0
+
+find(x):  // com path compression
+  se parent[x] != x:
+    parent[x] = find(parent[x])
+  retorna parent[x]
+
+union(x, y):  // union by rank
+  rx = find(x)
+  ry = find(y)
+  se rx == ry: retorna
+  se rank[rx] &lt; rank[ry]:
+    parent[rx] = ry
+  senão se rank[rx] &gt; rank[ry]:
+    parent[ry] = rx
+  senão:
+    parent[rx] = ry
+    rank[ry]++
+</code></pre>
+
+                    <h2>2. Complexidade (visão geral)</h2>
+
+                    <p><strong>Sem Path Compression:</strong> usando apenas Union by Rank, a altura da árvore fica limitada por <code>O(log n)</code>,
+                        então um <code>find</code> tem custo <code>O(log n)</code> no pior caso (e o <code>union</code> também, pois faz dois <code>find</code>).</p>
+
+                    <p>Com Union by Rank + Path Compression, o custo por operação é <code>O(&alpha;(n))</code> amortizado,
+                        onde <code>&alpha;(n)</code> é a função inversa de Ackermann (cresce extremamente devagar).</p>
+
+                    <h2>3. O que observar no simulador</h2>
+
+                    <ul>
+                        <li>A tabela extra mostra <code>rank</code> apenas nas <strong>raízes</strong> (nos demais nós aparece <code>-</code>).</li>
+                        <li>Quando ocorre empate de ranks, o rank da nova raiz aumenta em 1 (convenção do exemplo).</li>
+                        <li>Ao usar <code>Buscar (find)</code>, observe a compressão de caminho reduzindo os caminhos até a raiz.</li>
+                    </ul>
+
                     <p><strong>Regras Adotadas</strong></p>
 
                     <p>Cada conjunto terá:</p>

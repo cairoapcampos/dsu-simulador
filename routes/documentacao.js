@@ -9,6 +9,10 @@ router.get('/dsu-sem-otimizacoes', (req, res) => {
   res.render('docs/doc-dsu');
 });
 
+router.get('/path-compression', (req, res) => {
+  res.render('docs/doc-path-compression');
+});
+
 router.get('/union-by-size-path-compression', (req, res) => {
   res.render('docs/doc-union-by-size');
 });

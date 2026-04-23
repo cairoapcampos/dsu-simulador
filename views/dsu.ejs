@@ -8,9 +8,10 @@
                 <div class="mb-2 d-flex justify-content-center align-items-center mode-row">
                     <label for="dsuMode" class="control-label">Modo:</label>
                     <select id="dsuMode" class="form-select d-inline-block text-center dsu-mode-select">
-                        <option value="naive" selected>Modo Ingênuo (Sem Otimizações)</option>
-                        <option value="sizepc">Union by Size + Path Compression</option>
-                        <option value="rankpc">Union by Rank + Path Compression</option>
+                        <option value="naive" selected>Modo Ingênuo (Sem Otimizações) (O(n))</option>
+                        <option value="pc">Somente Path Compression (O(log n))</option>
+                        <option value="sizepc">Union by Size + Path Compression (O(&alpha;(n)))</option>
+                        <option value="rankpc">Union by Rank + Path Compression (O(&alpha;(n)))</option>
                     </select>
                 </div>
                 <div class="d-flex justify-content-center gap-2" id="buttonContainer">

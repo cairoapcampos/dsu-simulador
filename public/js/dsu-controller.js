@@ -4,6 +4,7 @@
 
 import {
     DisjointSetUnion,
+    DisjointSetUnionPathCompression,
     DisjointSetUnionBySizePathCompression,
     DisjointSetUnionByRankPathCompression
 } from './dsu.js';
@@ -60,6 +61,12 @@ const modeConfig = {
         unions: defaultUnions,
         hasPathCompression: false,
         createDSU: () => new DisjointSetUnion(baseLabels.length),
+        labels: baseLabels
+    },
+    pc: {
+        unions: defaultUnions,
+        hasPathCompression: true,
+        createDSU: () => new DisjointSetUnionPathCompression(baseLabels.length),
         labels: baseLabels
     },
     sizepc: {

@@ -1,0 +1,91 @@
+<%- include('../components/page-top', { title: 'Somente Path Compression', bodyClass: 'doc-body', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar doc-page\">' }) %>
+            <div class="mb-3">
+                <a href="/documentacao" class="text-decoration-none"><i class="fa-solid fa-arrow-left"></i>
+                    Voltar para Documentação</a>
+            </div>
+
+            <div class="doc-wrap">
+                <article class="doc-article">
+
+                    <h1>Somente Path Compression</h1>
+
+                    <p>Neste modo, a DSU mantém a operação <code>union(x, y)</code> <strong>ingênua</strong> (sem heurística de tamanho ou rank),
+                        mas a operação <code>find(x)</code> aplica <strong>Path Compression</strong>.</p>
+
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong>O que otimiza:</strong> apenas a operação <code>find</code>.</li>
+                        <li><strong>Ideia:</strong> depois de encontrar a raiz, faz os nós visitados apontarem direto para a raiz.</li>
+                        <li><strong>Efeito visual:</strong> a árvore vai ficando mais “achatada” ao longo de várias buscas.</li>
+                    </ul>
+
+                    <h2>1. O que muda em relação ao modo ingênuo?</h2>
+
+                    <p><strong>Nada muda</strong> na estrutura da árvore <em>apenas</em> por fazer uniões. A diferença aparece quando você executa
+                        <code>find</code>:</p>
+
+                    <ul>
+                        <li>No modo ingênuo, <code>find(x)</code> apenas sobe pelos pais até encontrar a raiz.</li>
+                        <li>No modo com Path Compression, além de encontrar a raiz, <code>find(x)</code> atualiza os nós do caminho para apontarem
+                            direto para a raiz.</li>
+                    </ul>
+
+                    <p>Na prática, isso <strong>achata</strong> a árvore ao longo do uso: depois de alguns <code>find</code>, muitos nós passam a ficar
+                        a 1 aresta da raiz.</p>
+
+                    <h2>2. Implementação típica</h2>
+
+                    <p>A implementação é a mesma ideia usada nos modos otimizados, mas aplicada sobre uma DSU básica:</p>
+
+                    <pre><code>
+find(x):
+  se parent[x] != x:
+    parent[x] = find(parent[x])
+  retorna parent[x]
+</code></pre>
+
+                    <p>No simulador, a operação <code>union</code> continua simples e <strong>não</strong> dispara compressão de caminho
+                        (para ficar mais fácil observar o efeito do <code>find</code>). Ela apenas conecta as raízes, sem comparar size/rank.</p>
+
+                    <h2>3. Algoritmos (pseudocódigo)</h2>
+
+                    <pre><code>
+make_set(x):
+  parent[x] = x
+
+find(x):  // com path compression
+  se parent[x] != x:
+    parent[x] = find(parent[x])
+  retorna parent[x]
+
+union(x, y):  // ingênuo (sem size/rank)
+  rx = raiz(x)  // no simulador: sem compressão
+  ry = raiz(y)
+  se rx != ry:
+    parent[ry] = rx
+</code></pre>
+
+                    <h2>4. Complexidade (intuição)</h2>
+
+                    <p>No modo ingênuo, o <code>find</code> pode percorrer uma cadeia grande (árvore alta), custando até <code>O(n)</code>.</p>
+                    <p>Com Path Compression, cada <code>find</code> tende a achatar caminhos, então buscas futuras ficam mais baratas.
+                        Por isso, a análise mais comum é <strong>amortizada</strong> (ao longo de várias operações), e é comum encontrar
+                        o resultado <code>O(log n)</code> amortizado para “apenas Path Compression”.</p>
+
+                    <h2>5. Como ver no simulador</h2>
+
+                    <p>Selecione o modo <strong>Somente Path Compression</strong> e use <code>Buscar (find)</code> para observar, passo a passo,
+                        as atualizações do vetor <code>parent</code> causadas pela compressão de caminho.</p>
+
+                    <h2>6. O que observar no simulador</h2>
+
+                    <ul>
+                        <li>Faça algumas uniões primeiro para formar uma árvore mais alta.</li>
+                        <li>Depois execute <code>find</code> em um nó “do fundo” e observe o vetor <code>parent</code> sendo atualizado.</li>
+                        <li>Repita o mesmo <code>find</code>: o caminho deve ficar menor (muitas vezes vira 1 aresta até a raiz).</li>
+                    </ul>
+
+                </article>
+            </div>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>

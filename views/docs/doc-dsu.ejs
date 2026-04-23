@@ -18,6 +18,47 @@
                     <p>Ela faz isso representando cada conjunto como uma <strong>árvore</strong>. No começo, tem-se várias árvores pequenas;
                         à medida que são feitas uniões, essas árvores vão sendo conectadas.</p>
 
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong>Estrutura:</strong> floresta de árvores representada por um vetor <code>parent</code>.</li>
+                        <li><strong>Raiz:</strong> um nó é raiz quando <code>parent[x] === x</code>.</li>
+                        <li><strong>find(x):</strong> sobe pelos pais até encontrar a raiz (representante).</li>
+                        <li><strong>union(x, y):</strong> liga a raiz de um conjunto na raiz do outro.</li>
+                        <li><strong>Limitação:</strong> sem heurísticas, a árvore pode ficar alta, tornando <code>find</code> caro.</li>
+                    </ul>
+
+                    <h2>1. Algoritmos (pseudocódigo)</h2>
+
+                    <pre><code>
+make_set(x):
+  parent[x] = x
+
+find(x):  // sem otimizações
+  enquanto parent[x] != x:
+    x = parent[x]
+  retorna x
+
+union(x, y):
+  rx = find(x)
+  ry = find(y)
+  se rx != ry:
+    parent[ry] = rx  // ou parent[rx] = ry (qualquer direção válida)
+</code></pre>
+
+                    <h2>2. Complexidade (visão geral)</h2>
+
+                    <p>Sem otimizações, no pior caso a árvore pode virar uma “corrente” com <code>n</code> nós.
+                        Assim, um <code>find</code> pode custar até <code>O(n)</code>.</p>
+
+                    <h2>3. O que observar no simulador</h2>
+
+                    <ul>
+                        <li>Repare como algumas escolhas de <code>union</code> podem criar caminhos longos até a raiz.</li>
+                        <li>Observe o caminho percorrido por um <code>find</code> (ex.: um nó que está a vários níveis da raiz).</li>
+                        <li>Compare com os modos que têm Path Compression para ver como a árvore “achata”.</li>
+                    </ul>
+
                     <h2>1. Estado inicial</h2>
 
                     <p>Temo-se os nós:</p>

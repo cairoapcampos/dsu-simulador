@@ -49,6 +49,7 @@ Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 | `/` | Visualização interativa do Disjoint Set Union |
 | `/documentacao` | Índice da Documentação |
 | `/documentacao/dsu-sem-otimizacoes` | DSU sem otimizações (explicação) |
+| `/documentacao/path-compression` | Somente Path Compression (explicação) |
 | `/documentacao/union-by-size-path-compression` | Union by Size + Path Compression (explicação) |
 | `/documentacao/union-by-rank-path-compression` | Union by Rank + Path Compression (explicação) |
 | `/referencias` | Referências e Podcast |
@@ -60,6 +61,7 @@ Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 | Modo | O que demonstra |
 |---|---|
 | Modo Ingênuo (Sem Otimizações) | União simples, sem heurística de otimização |
+| Somente Path Compression | Compressão de caminho no `find`, sem Union by Size/Rank |
 | Union by Size + Path Compression | União pelo tamanho do conjunto e compressão de caminho no `find` |
 | Union by Rank + Path Compression | União pelo rank da raiz e compressão de caminho no `find` |
 
