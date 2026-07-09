@@ -265,6 +265,22 @@ kruskal(V, E):
                         <li>a verificação de ciclo torna-se muito eficiente.</li>
                     </ul>
 
+                    <h3>7.1 O Kruskal Funcionaria sem DSU?</h3>
+
+                    <p>Sim. A DSU não é obrigatória para a correção do algoritmo de Kruskal. Mesmo sem essa estrutura, o
+                        algoritmo ainda pode ordenar as arestas por peso crescente e decidir, a cada passo, se uma nova
+                        aresta deve ser aceita ou descartada.</p>
+
+                    <p>A diferença está na forma de verificar a existência de ciclo. Sem DSU, essa verificação poderia ser
+                        feita buscando no grafo atual se já existe um caminho entre os vértices da aresta analisada, por
+                        exemplo com uma busca em profundidade ou em largura.</p>
+
+                    <p>Assim, o Kruskal continua correto sem DSU, mas tende a ser menos eficiente. Isso ocorre porque, sem
+                        a estrutura de conjuntos disjuntos, pode ser necessário executar uma nova busca no grafo parcial a
+                        cada aresta analisada para descobrir se seus extremos já estão conectados. Em contrapartida, com DSU,
+                        essa informação de conectividade é mantida de forma incremental por meio de <code>find</code> e
+                        <code>union</code>, o que torna essa etapa significativamente mais rápida.</p>
+
                     <h2>8. Complexidade</h2>
 
                     <p>A complexidade total do Kruskal com DSU depende de duas partes:</p>
