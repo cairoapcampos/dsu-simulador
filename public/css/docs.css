@@ -206,3 +206,133 @@
   color: #cccccc;
   text-decoration: none;
 }
+
+.kruskal-demo {
+  margin: 1.25rem 0 2rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #f8fbff;
+}
+
+.kruskal-demo-controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.kruskal-demo-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 2fr) minmax(280px, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.kruskal-graph-card,
+.kruskal-status-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.kruskal-card-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+#kruskal-cy {
+  width: 100%;
+  height: 340px;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  background: #fcfdff;
+}
+
+.kruskal-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.85rem;
+  font-size: 0.95rem;
+}
+
+.kruskal-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.kruskal-swatch {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+
+.kruskal-swatch-current {
+  background: #f59e0b;
+}
+
+.kruskal-swatch-accepted {
+  background: #16a34a;
+}
+
+.kruskal-swatch-rejected {
+  background: #dc2626;
+}
+
+#kruskal-status {
+  color: #1f2937;
+}
+
+.kruskal-step-badge {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.kruskal-status-block {
+  margin-bottom: 0.9rem;
+}
+
+.kruskal-status-block:last-child {
+  margin-bottom: 0;
+}
+
+.kruskal-list {
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.kruskal-inline-code {
+  font-family: "Courier New", Courier, monospace;
+  background: #f3f4f6;
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+}
+
+.kruskal-accepted {
+  color: #166534;
+  font-weight: 700;
+}
+
+.kruskal-rejected {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .kruskal-demo-grid {
+    grid-template-columns: 1fr;
+  }
+}

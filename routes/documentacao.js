@@ -25,4 +25,8 @@ router.get('/complexidade', (req, res) => {
   res.render('docs/doc-complexidade');
 });
 
+router.get('/kruskal-com-dsu', (req, res) => {
+  res.render('docs/doc-kruskal-dsu');
+});
+
 module.exports = router;

@@ -1,0 +1,319 @@
+<%- include('../components/page-top', { title: 'Kruskal com DSU', bodyClass: 'doc-body', scripts: ['/vendor/cytoscape/cytoscape.min.js'], stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar doc-page\">' }) %>
+            <div class="mb-3">
+                <a href="/documentacao" class="text-decoration-none"><i class="fa-solid fa-arrow-left"></i>
+                    Voltar para Documentação</a>
+            </div>
+
+            <div class="doc-wrap">
+                <article class="doc-article">
+
+                    <h1>Algoritmo de Kruskal com DSU</h1>
+
+                    <p>O algoritmo de <strong>Kruskal</strong> é um método guloso para encontrar uma
+                        <strong>árvore geradora mínima</strong> em um grafo não direcionado e ponderado.
+                        A <strong>Disjoint Set Union (DSU)</strong> é a estrutura que permite verificar, de forma eficiente,
+                        se a inclusão de uma aresta criaria ciclo.
+                    </p>
+
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong>Objetivo:</strong> selecionar arestas de menor peso sem formar ciclos.</li>
+                        <li><strong>Ideia do Kruskal:</strong> ordenar as arestas por peso e processá-las em ordem crescente.</li>
+                        <li><strong>Papel da DSU:</strong> manter os componentes conectados atualizados ao longo do algoritmo.</li>
+                        <li><strong>Critério de decisão:</strong> uma aresta é aceita se seus extremos pertencem a conjuntos diferentes.</li>
+                    </ul>
+
+                    <h2>1. Problema Resolvido</h2>
+
+                    <p>Dado um grafo ponderado, deseja-se escolher um subconjunto de arestas que:</p>
+
+                    <ul>
+                        <li>conecte todos os vértices;</li>
+                        <li>não forme ciclos;</li>
+                        <li>tenha soma de pesos mínima.</li>
+                    </ul>
+
+                    <p>Esse subconjunto recebe o nome de <strong>árvore geradora mínima</strong>.</p>
+
+                    <p>Nesta explicação, considera-se o caso em que o grafo é conectado. Se o grafo não for conectado, o
+                        algoritmo de Kruskal produz uma <strong>floresta geradora mínima</strong>, isto é, uma árvore mínima
+                        para cada componente conexo.</p>
+
+                    <h2>1.1 Para Que Serve a Árvore Geradora Mínima?</h2>
+
+                    <p>A árvore geradora mínima serve para <strong>conectar todos os vértices de um grafo com o menor custo total
+                        possível</strong>, sem formar ciclos. Em termos práticos, ela permite identificar uma estrutura de conexão
+                        economicamente eficiente, mantendo apenas as ligações indispensáveis para que todos os pontos permaneçam
+                        conectados.</p>
+
+                    <p>Esse conceito aparece em diversos contextos práticos, como:</p>
+
+                    <ul>
+                        <li>projeto de redes de computadores com menor custo de cabeamento;</li>
+                        <li>planejamento de redes elétricas, de água ou de telecomunicações;</li>
+                        <li>construção de estradas ou rotas de conexão entre cidades;</li>
+                        <li>agrupamento e organização de dados em alguns problemas de computação.</li>
+                    </ul>
+
+                    <p>No caso do algoritmo de Kruskal, o objetivo é justamente construir essa estrutura mínima, escolhendo
+                        as arestas de menor peso em ordem crescente e usando a DSU para verificar se a inclusão de uma nova
+                        aresta preserva a conectividade sem introduzir ciclos.</p>
+
+                    <h2>2. Onde a DSU Entra</h2>
+
+                    <p>Ao processar uma aresta <code>(u, v)</code>, o Kruskal precisa responder:</p>
+
+                    <p><strong>Os vértices <code>u</code> e <code>v</code> já estão no mesmo componente?</strong></p>
+
+                    <p>Se a resposta for <strong>sim</strong>, a aresta é descartada, pois formaria ciclo.</p>
+
+                    <p>Se a resposta for <strong>não</strong>, a aresta é aceita e os dois componentes são unidos.</p>
+
+                    <p>É exatamente isso que a DSU faz com eficiência usando <code>find</code> e <code>union</code>.</p>
+
+                    <h2>3. Pseudocódigo do Kruskal com DSU</h2>
+
+                    <pre><code>
+kruskal(V, E):
+  para cada vértice v em V:
+    make_set(v)
+
+  ordenar E por peso crescente
+
+  mst = []
+  custo_total = 0
+
+  para cada aresta (u, v, w) em E:
+    se find(u) != find(v):
+      mst.adicionar((u, v, w))
+      custo_total += w
+      union(u, v)
+
+  retorna mst, custo_total
+</code></pre>
+
+                    <p>Na notação acima:</p>
+
+                    <ul>
+                        <li><code>V</code> representa o conjunto de vértices do grafo;</li>
+                        <li><code>E</code> representa o conjunto de arestas do grafo;</li>
+                        <li><code>u</code> e <code>v</code> são os vértices ligados por uma aresta;</li>
+                        <li><code>w</code> é o peso da aresta, isto é, seu custo;</li>
+                        <li><code>mst</code> armazena as arestas escolhidas para a árvore geradora mínima;</li>
+                        <li><code>custo_total</code> soma os pesos das arestas aceitas.</li>
+                    </ul>
+
+                    <p>Na prática, o algoritmo pode ser encerrado assim que <code>|V| - 1</code> arestas tiverem sido aceitas,
+                        pois esse é exatamente o número de arestas de uma árvore com <code>|V|</code> vértices.</p>
+
+                    <h2>4. Intuição do Algoritmo</h2>
+
+                    <p>O Kruskal segue uma estratégia gulosa:</p>
+
+                    <ul>
+                        <li>primeiro tenta usar as arestas mais baratas;</li>
+                        <li>antes de aceitar uma aresta, verifica se ela conectará dois componentes distintos;</li>
+                        <li>se conectar componentes diferentes, a aresta é útil;</li>
+                        <li>se conectar vértices do mesmo componente, ela criaria ciclo e deve ser descartada.</li>
+                    </ul>
+
+                    <h2>5. Exemplo Passo a Passo</h2>
+
+                    <p>Considere o seguinte grafo:</p>
+
+                    <ul>
+                        <li><code>(A, B, 1)</code></li>
+                        <li><code>(B, C, 2)</code></li>
+                        <li><code>(A, D, 3)</code></li>
+                        <li><code>(D, E, 4)</code></li>
+                        <li><code>(B, E, 5)</code></li>
+                        <li><code>(C, E, 6)</code></li>
+                    </ul>
+
+                    <p>As arestas já estão em ordem crescente de peso. Neste exemplo, o grafo foi desenhado com cinco
+                        vértices e sem cruzamento de arestas, para tornar a leitura visual mais clara.</p>
+
+                    <h3>5.0 Visualização Interativa</h3>
+
+                    <p>O bloco abaixo mostra, passo a passo, como o Kruskal analisa cada aresta e como a DSU acompanha os
+                        componentes conectados ao longo da execução.</p>
+
+                    <p>Na caixa <strong>Estado do Algoritmo</strong>, são exibidos o resultado das operações
+                        <code>find</code>, a decisão de aceitar ou descartar a aresta analisada, a eventual operação
+                        <code>union</code>, os componentes formados até o passo atual e o custo acumulado da árvore
+                        geradora mínima.</p>
+
+                    <div class="kruskal-demo">
+                        <div class="kruskal-demo-controls">
+                            <button id="kruskalPrevBtn" class="btn btn-primary">Passo Anterior</button>
+                            <button id="kruskalNextBtn" class="btn btn-primary">Próximo Passo</button>
+                            <button id="kruskalResetBtn" class="btn btn-danger">Resetar</button>
+                        </div>
+                        <div class="kruskal-demo-grid">
+                            <div class="kruskal-graph-card">
+                                <div class="kruskal-card-title">Grafo</div>
+                                <div id="kruskal-cy"></div>
+                                <div class="kruskal-legend">
+                                    <span class="kruskal-legend-item"><span class="kruskal-swatch kruskal-swatch-current"></span>Aresta em análise</span>
+                                    <span class="kruskal-legend-item"><span class="kruskal-swatch kruskal-swatch-accepted"></span>Aresta aceita</span>
+                                    <span class="kruskal-legend-item"><span class="kruskal-swatch kruskal-swatch-rejected"></span>Aresta descartada</span>
+                                </div>
+                            </div>
+                            <div class="kruskal-status-card">
+                                <div class="kruskal-card-title">Estado do Algoritmo</div>
+                                <div id="kruskal-status"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>5.1 Estado inicial</h3>
+
+                    <p>Cada vértice começa em seu próprio conjunto:</p>
+
+                    <p><code>{A} {B} {C} {D} {E}</code></p>
+
+                    <h3>5.2 Aresta (A, B, 1)</h3>
+
+                    <ul>
+                        <li><code>find(A) != find(B)</code></li>
+                        <li>a aresta é aceita</li>
+                        <li>faz-se <code>union(A, B)</code></li>
+                    </ul>
+
+                    <p>Conjuntos após a união:</p>
+
+                    <p><code>{A, B} {C} {D} {E}</code></p>
+
+                    <h3>5.3 Aresta (B, C, 2)</h3>
+
+                    <ul>
+                        <li><code>find(B) != find(C)</code></li>
+                        <li>a aresta é aceita</li>
+                        <li>faz-se <code>union(B, C)</code></li>
+                    </ul>
+
+                    <p>Conjuntos após a união:</p>
+
+                    <p><code>{A, B, C} {D} {E}</code></p>
+
+                    <h3>5.4 Aresta (A, D, 3)</h3>
+
+                    <ul>
+                        <li><code>find(A) != find(D)</code></li>
+                        <li>a aresta é aceita</li>
+                        <li>faz-se <code>union(A, D)</code></li>
+                    </ul>
+
+                    <p>Conjuntos após a união:</p>
+
+                    <p><code>{A, B, C, D} {E}</code></p>
+
+                    <h3>5.5 Aresta (D, E, 4)</h3>
+
+                    <ul>
+                        <li><code>find(D) != find(E)</code></li>
+                        <li>a aresta é aceita</li>
+                        <li>faz-se <code>union(D, E)</code></li>
+                    </ul>
+
+                    <p>Conjuntos após a união:</p>
+
+                    <p><code>{A, B, C, D, E}</code></p>
+
+                    <h3>5.6 Aresta (B, E, 5)</h3>
+
+                    <ul>
+                        <li><code>find(B) == find(E)</code></li>
+                        <li>a aresta é descartada</li>
+                        <li>ela formaria ciclo, pois já existe um caminho ligando <code>B</code> até <code>E</code> no componente atual</li>
+                    </ul>
+
+                    <h3>5.7 Aresta (C, E, 6)</h3>
+
+                    <ul>
+                        <li><code>find(C) == find(E)</code></li>
+                        <li>a aresta é descartada</li>
+                        <li>ela também formaria ciclo, pois <code>C</code> e <code>E</code> já estão conectados indiretamente</li>
+                    </ul>
+
+                    <h2>6. Resultado do Exemplo</h2>
+
+                    <p>A árvore geradora mínima encontrada é:</p>
+
+                    <ul>
+                        <li><code>(A, B, 1)</code></li>
+                        <li><code>(B, C, 2)</code></li>
+                        <li><code>(A, D, 3)</code></li>
+                        <li><code>(D, E, 4)</code></li>
+                    </ul>
+
+                    <p>Custo total:</p>
+
+                    <p><code>1 + 2 + 3 + 4 = 10</code></p>
+
+                    <h2>7. Por Que a DSU É Importante no Kruskal?</h2>
+
+                    <p>Sem uma estrutura adequada, seria mais caro verificar se dois vértices já pertencem ao mesmo componente
+                        em cada etapa do algoritmo.</p>
+
+                    <p>Com DSU:</p>
+
+                    <ul>
+                        <li><code>find</code> verifica a qual componente cada vértice pertence;</li>
+                        <li><code>union</code> atualiza os componentes quando uma aresta é aceita;</li>
+                        <li>a verificação de ciclo torna-se muito eficiente.</li>
+                    </ul>
+
+                    <h2>8. Complexidade</h2>
+
+                    <p>A complexidade total do Kruskal com DSU depende de duas partes:</p>
+
+                    <ul>
+                        <li><strong>Ordenação das arestas:</strong> <code>O(E log E)</code></li>
+                        <li><strong>Operações da DSU:</strong> aproximadamente <code>O(E &alpha;(V))</code> com Path Compression e Union by Rank/Size</li>
+                    </ul>
+
+                    <p>Embora a DSU torne a verificação de conectividade e de ciclos muito eficiente, o custo de ordenar as
+                        arestas costuma dominar a complexidade total do algoritmo.</p>
+
+                    <p>Como a etapa de ordenação domina assintoticamente, costuma-se apresentar:</p>
+
+                    <p><strong><code>O(E log E)</code></strong></p>
+
+                    <p>Como <code>E log E</code> e <code>E log V</code> são equivalentes em análise assintótica para esse contexto,
+                        também é comum encontrar a forma <code>O(E log V)</code>.</p>
+
+                    <h2>9. Relação com o Simulador</h2>
+
+                    <p>O simulador deste projeto mostra como a DSU organiza componentes e aplica operações de
+                        <code>find</code> e <code>union</code>. Embora ele não execute o algoritmo de Kruskal diretamente, ele permite
+                        entender o mecanismo central usado pelo Kruskal para evitar ciclos.</p>
+
+                    <p>Ao estudar o simulador, vale pensar da seguinte forma:</p>
+
+                    <ul>
+                        <li>cada conjunto da DSU representa um componente do grafo;</li>
+                        <li><code>find(u) == find(v)</code> significa que <code>u</code> e <code>v</code> já estão conectados;</li>
+                        <li>nesse caso, uma nova aresta entre eles geraria ciclo;</li>
+                        <li>se <code>find(u) != find(v)</code>, a aresta pode ser aceita e os componentes são unidos.</li>
+                    </ul>
+
+                    <h2>10. Conclusão</h2>
+
+                    <p>A DSU é uma das estruturas mais importantes para implementar o algoritmo de Kruskal com eficiência.
+                        Ela reduz o custo das verificações de conectividade e torna natural a decisão de aceitar ou descartar
+                        cada aresta.</p>
+
+                    <p>Em resumo:</p>
+
+                    <ul>
+                        <li>Kruskal escolhe arestas em ordem crescente de peso;</li>
+                        <li>DSU identifica rapidamente se a aresta criaria ciclo;</li>
+                        <li>a combinação dos dois produz uma solução eficiente para árvore geradora mínima.</li>
+                    </ul>
+
+                </article>
+            </div>
+    <script type="module" src="/js/doc-kruskal-dsu.js"></script>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>
