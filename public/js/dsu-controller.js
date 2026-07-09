@@ -327,33 +327,20 @@ function renderPseudocode() {
 
     let html = '';
     const mode = elements.modeSelect ? elements.modeSelect.value : 'naive';
+    const history = dsu.history || [];
 
     if (step === 0) {
         html += renderInitialPseudocode(mode);
-    } else {
-        // Exibe union como cabeçalho e sub-passos internos indentados abaixo
-        const history = dsu.history || [];
-        const i = step - 1;
-        const [u, v] = unions[i];
-        const previousState = history[step - 1];
-        const currentState = history[step];
-        const parentBefore = getParentState(previousState);
-        const parentAfter = getParentState(currentState);
-        const rootU = pcGetRoot(parentBefore, u);
-        const rootV = pcGetRoot(parentBefore, v);
-
-        if (mode === 'sizepc') {
-            html += renderSizePseudocodeStep(u, v, rootU, rootV, previousState, currentState);
-        } else if (mode === 'rankpc') {
-            html += renderRankPseudocodeStep(u, v, rootU, rootV, previousState, currentState);
-        } else {
-            html += renderBasicPseudocodeStep(u, v, rootU, rootV, parentAfter);
-        }
-
-        if (step >= unions.length) {
+        if (unions.length > 0) {
             html += '<div class="pc-separator"></div>';
-            html += '<div class="pc-line pc-done" style="font-style:italic;font-size:0.82em;">// concluído</div>';
+            html += renderUpcomingUnionPseudocode(mode, 0, history[0]);
         }
+    } else if (step < unions.length) {
+        html += renderUpcomingUnionPseudocode(mode, step, history[step]);
+    } else {
+        html += '<div class="pc-line pc-done" style="font-style:italic;font-size:0.82em;">Todas as unions foram executadas.</div>';
+        html += '<div class="pc-separator"></div>';
+        html += '<div class="pc-line pc-done" style="font-style:italic;font-size:0.82em;">// concluído</div>';
     }
     pcContent.innerHTML = html;
 }
@@ -390,6 +377,32 @@ function renderMakeSetBlock(label, mode) {
     }
     html += '<div class="pc-spacer"></div>';
     return html;
+}
+
+function renderUpcomingUnionPseudocode(mode, unionIndex, currentState) {
+    const [u, v] = unions[unionIndex];
+    const stateBefore = currentState || dsu.createState();
+    const projectedState = projectUnionState(mode, stateBefore, u, v);
+    const parentBefore = getParentState(stateBefore);
+    const parentAfter = getParentState(projectedState);
+    const rootU = pcGetRoot(parentBefore, u);
+    const rootV = pcGetRoot(parentBefore, v);
+
+    if (mode === 'sizepc') {
+        return renderSizePseudocodeStep(u, v, rootU, rootV, stateBefore, projectedState);
+    }
+    if (mode === 'rankpc') {
+        return renderRankPseudocodeStep(u, v, rootU, rootV, stateBefore, projectedState);
+    }
+    return renderBasicPseudocodeStep(u, v, rootU, rootV, parentAfter);
+}
+
+function projectUnionState(mode, stateBefore, u, v) {
+    const config = modeConfig[mode] || modeConfig.naive;
+    const projectedDSU = config.createDSU();
+    projectedDSU.applyState(stateBefore);
+    projectedDSU.union(u, v);
+    return projectedDSU.createState();
 }
 
 // Percorre o vetor de pais sem modificar o DSU (uso exclusivo do painel)
