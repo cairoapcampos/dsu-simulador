@@ -23,8 +23,9 @@
 
                     <h2>1. O que muda em relação ao modo ingênuo?</h2>
 
-                    <p>Nesta sequência específica do simulador, as operações de <code>union</code> quase não alteram visualmente a estrutura da árvore. A diferença torna-se mais evidente quando se executa
-                        <code>find</code>:</p>
+                    <p>Nesta sequência específica do simulador, as primeiras operações de <code>union</code> quase não alteram
+                        visualmente a estrutura da árvore. A diferença torna-se mais evidente na última união e também quando
+                        se executa <code>find</code> manualmente:</p>
 
                     <ul>
                         <li>No modo ingênuo, <code>find(x)</code> apenas sobe pelos pais até encontrar a raiz.</li>
@@ -89,17 +90,23 @@ union(x, y):  // ingênuo (sem size/rank)
                         <li>O painel de <strong>Pseudocódigo</strong> antecipa a <strong>próxima</strong> <code>union</code> antes do clique em <code>Próximo Passo</code>, o que ajuda a acompanhar onde a compressão pode ocorrer.</li>
                     </ul>
 
-                    <h2>7. Por que as unions quase não mudam visualmente?</h2>
+                    <h2>7. Quando a compressão aparece automaticamente nas unions?</h2>
 
-                    <p>Nesta sequência específica do simulador, o <strong>Path Compression</strong> existe e pode ser executado dentro de
-                        <code>union</code>, mas quase não produz mudança visual nas uniões.</p>
+                    <p>Nesta sequência, o <strong>Path Compression</strong> existe desde o início, mas ele só produz mudança visual
+                        quando o <code>find</code> percorre um caminho com <strong>2 ou mais saltos</strong> até a raiz.</p>
 
-                    <p>O motivo é o seguinte: o Path Compression só altera a estrutura quando o <code>find</code> percorre um caminho com
-                        <strong>2 ou mais saltos</strong> até a raiz. Se o nó já está a apenas 1 salto da raiz, comprimir significa manter o
-                        mesmo pai, ou seja, não há mudança visível.</p>
+                    <p>Nas primeiras uniões, os nós usados como argumentos ainda são raízes ou estão a apenas 1 salto da raiz.
+                        Nesses casos, o <code>find</code> até é executado, mas comprimir o caminho significa manter o mesmo pai,
+                        ou seja, não há mudança visível.</p>
 
-                    <p>Exemplo: se <code>b → a</code> e <code>a</code> já é a raiz, comprimir o caminho de <code>b</code> apenas reafirma
-                        <code>parent[b] = a</code>. Isso é um <em>no-op</em>.</p>
+                    <p>A diferença aparece no último passo, <code>union(h, d)</code>. Nesse momento, <code>d</code> já está em um
+                        caminho mais profundo até a raiz, então o <code>find(d)</code> efetivamente encurta esse caminho antes da
+                        união final entre os componentes.</p>
+
+                    <p>Há um detalhe importante: nessa etapa, o <code>find(d)</code> ainda enxerga <code>e</code> como raiz do seu
+                        componente. Por isso, a compressão faz <code>c → e</code> e <code>d → e</code>. Só depois dessa compressão
+                        a <code>union</code> conecta as raízes dos dois componentes, fazendo <code>e → g</code>. Assim, os nós
+                        comprimidos passam primeiro a apontar para <code>e</code>, e não diretamente para <code>g</code>.</p>
 
                     <p>Trace completo:</p>
 
@@ -158,41 +165,42 @@ union(x, y):  // ingênuo (sem size/rank)
                             </tr>
                             <tr>
                                 <td>7</td>
-                                <td><code>union(h, f)</code></td>
-                                <td><code>h → g</code>, <code>f → e</code></td>
-                                <td>1 salto cada</td>
-                                <td>já aponta para a raiz</td>
+                                <td><code>union(h, d)</code></td>
+                                <td><code>h → g</code>, <code>d → c → a → e</code></td>
+                                <td>1 salto e 3 saltos</td>
+                                <td>sim: <code>c → e</code> e <code>d → e</code></td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <p>Depois do passo 5, por exemplo, <code>d</code> passa a ter um caminho mais longo até a raiz
-                        (<code>d → c → a</code>). Mesmo assim, nas uniões seguintes esse nó não é usado como argumento de
-                        <code>find</code>, então a compressão não aparece visualmente nesse momento.</p>
+                    <p>Depois do passo 6, o nó <code>d</code> passa a ter o caminho <code>d → c → a → e</code>. Como ele é usado
+                        diretamente no passo 7, a compressão aparece de forma automática dentro da própria <code>union</code>.</p>
 
                     <h2>8. Onde o efeito visual fica claro</h2>
 
-                    <p>Após as 7 unions, a árvore fica assim:</p>
+                    <p>Após as 7 unions, a árvore já aparece parcialmente achatada por causa da compressão ocorrida em
+                        <code>union(h, d)</code>:</p>
 
                     <pre><code>
 g
 ├── h
 └── e
     ├── f
-    └── a
-        ├── b
-        └── c
-            └── d
+    ├── a
+    │   └── b
+    ├── c
+    └── d
 </code></pre>
 
-                    <p>Nesse estado, <code>d</code> está a vários saltos da raiz. Ao clicar em <code>Buscar</code> para o nó
-                        <code>d</code>, o simulador consegue mostrar claramente a compressão:</p>
+                    <p>Nesse estado, ainda há nós que podem ser comprimidos mais uma vez. Ao clicar em <code>Buscar</code> para o nó
+                        <code>b</code>, por exemplo, o simulador consegue mostrar claramente uma nova compressão:</p>
 
-                    <p>Antes: <code>d → c → a → e → g</code></p>
-                    <p>Depois: <code>d → g</code>, com os nós intermediários visitados passando a apontar diretamente para a raiz.</p>
+                    <p>Antes: <code>b → a → e → g</code></p>
+                    <p>Depois: <code>b → g</code>, com os nós intermediários visitados passando a apontar diretamente para a raiz.</p>
 
                     <p>Esse é o principal valor didático do botão <code>Buscar</code> no modo <strong>Somente Path Compression</strong>:
-                        mostrar o achatamento drástico da árvore quando um nó profundo é consultado.</p>
+                        mostrar que a árvore pode continuar sendo achatada mesmo depois de uma compressão automática ocorrida
+                        dentro de <code>union</code>.</p>
 
                 </article>
             </div>

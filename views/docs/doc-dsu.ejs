@@ -206,7 +206,7 @@ A
                         <li><strong>union(G, H)</strong> produz <code>H → G</code></li>
                         <li><strong>union(B, D)</strong> produz <code>C → A</code></li>
                         <li><strong>union(F, B)</strong> produz <code>A → E</code></li>
-                        <li><strong>union(H, F)</strong> produz <code>E → G</code></li>
+                        <li><strong>union(H, D)</strong> produz <code>E → G</code></li>
                     </ul>
 
                     <p>Nesta seção, a seta <code>X → Y</code> indica que <strong>o pai de X passa a ser Y</strong>. Nos passos abaixo, o título registra a chamada de <code>union</code>, enquanto o texto destaca a aresta efetivamente alterada após a execução dos <code>find</code>.</p>
@@ -647,11 +647,11 @@ G
 
                     <p>Todos esses nós já pertencem ao mesmo conjunto, cuja raiz é <code>E</code>.</p>
 
-                    <h2>4.7 union(H, F)</h2>
+                    <h2>4.7 union(H, D)</h2>
 
-                    <p>Por fim, executa-se a chamada <strong>union(H, F)</strong>.</p>
+                    <p>Por fim, executa-se a chamada <strong>union(H, D)</strong>.</p>
 
-                    <p>Como <code>find(H) = G</code> e <code>find(F) = E</code>, a atualização efetiva no vetor <code>parent</code> é <strong>E → G</strong>.</p>
+                    <p>Como <code>find(H) = G</code> e <code>find(D) = E</code>, a atualização efetiva no vetor <code>parent</code> é <strong>E → G</strong>.</p>
 
                     <p>Então toda a árvore cuja raiz era <code>E</code> passa a ficar abaixo de <code>G</code>.</p>
 

@@ -8,6 +8,7 @@ import {
     DisjointSetUnionBySizePathCompression,
     DisjointSetUnionByRankPathCompression
 } from './dsu.js';
+import { advanceUnionWithHistory } from './dsu-step-history.mjs';
 import { createGraph, renderGraph, renderStatus, renderParentSizeTable, renderElementRankTable } from './dsu-visual.js';
 
 // Nomes dos nós e lista de uniões a serem realizadas
@@ -16,7 +17,7 @@ import { createGraph, renderGraph, renderStatus, renderParentSizeTable, renderEl
 // Modos originais (8 nós)
 const baseLabels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const defaultUnions = [
-    [0, 1], [2, 3], [4, 5], [6, 7], [1, 3], [5, 1], [7, 5]
+    [0, 1], [2, 3], [4, 5], [6, 7], [1, 3], [5, 1], [7, 3]
 ];
 // Ordem escolhida para preservar fidelidade algorítmica:
 // os passos finais usam nós comuns/folhas, e o find descobre as raízes.
@@ -26,7 +27,7 @@ const defaultUnions = [
 // union(H, G) => [7, 6]
 // union(D, B) => [3, 1]
 // union(F, B) => [5, 1]
-// union(H, F) => [7, 5]
+// union(H, D) => [7, 3]
 const optimizedUnions = [
     [1, 0], // B, A
     [3, 2], // D, C
@@ -34,7 +35,7 @@ const optimizedUnions = [
     [7, 6], // H, G
     [3, 1], // D, B
     [5, 1], // F, B
-    [7, 5]  // H, F
+    [7, 3]  // H, D
 ];
 let labels = baseLabels;
 let unions = defaultUnions;
@@ -522,10 +523,7 @@ function nextUnionStep() {
         clearPathCompressionAnimation();
         const previousParent = dsu.getParent();
         const previousSizeArray = dsu.getSizeArray();
-        let [u, v] = unions[step];
-        dsu.union(u, v);
-        step++;
-        dsu.snapshot();
+        step = advanceUnionWithHistory(dsu, step, unions);
         updateAll(previousParent, previousSizeArray);
     }
 }

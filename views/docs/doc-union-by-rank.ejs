@@ -922,34 +922,34 @@ G
 
                     <p>O rank de A continua 2, porque só aumenta quando há união entre raízes de mesmo rank.</p>
 
-                    <h2>2.7 union(H, F)</h2>
+                    <h2>2.7 union(H, D)</h2>
 
-                    <p>Agora precisa-se fazer <code>find(F)</code> primeiro.</p>
+                    <p>Agora precisa-se fazer <code>find(D)</code> primeiro.</p>
 
                     <p>Atualmente:</p>
 
                     <ul>
-                        <li><code>F → E → A</code></li>
+                        <li><code>D → C → A</code></li>
                     </ul>
 
                     <p>Então:</p>
                     <ul>
-                        <li><code>find(F) = A</code></li>
+                        <li><code>find(D) = A</code></li>
                     </ul>
 
-                    <p>Como há path compression, F passa a apontar diretamente para A.</p>
+                    <p>Como há path compression, D passa a apontar diretamente para A.</p>
 
                     <p>Para H:</p>
                     <ul>
                         <li><code>find(H) = G</code></li>
                     </ul>
 
-                    <p>No simulador, a chamada é <code>union(H, F)</code>. Como <code>find(H)</code> retorna <code>G</code> e <code>find(F)</code> retorna <code>A</code>, a comparação efetiva passa a ser entre as raízes <code>G</code> e <code>A</code>.</p>
+                    <p>No simulador, a chamada é <code>union(H, D)</code>. Como <code>find(H)</code> retorna <code>G</code> e <code>find(D)</code> retorna <code>A</code>, a comparação efetiva passa a ser entre as raízes <code>G</code> e <code>A</code>.</p>
 
                     <p>Agora comparando:</p>
 
                     <ul>
-                        <li>Raiz de <code>F</code> é <code>A</code>, rank 2</li>
+                        <li>Raiz de <code>D</code> é <code>A</code>, rank 2</li>
                         <li>Raiz de <code>G</code> é <code>G</code>, rank 1</li>
                     </ul>
 
@@ -961,9 +961,9 @@ G
 A
 ├── B
 ├── C
-│   └── D
+├── D
 ├── E
-├── F
+│   └── F
 └── G
     └── H
 </code></pre>
@@ -993,7 +993,7 @@ A
                                 <td>C</td>
                             </tr>
                             <tr>
-                                <td>C</td>
+                                <td>A</td>
                                 <td>D</td>
                             </tr>
                             <tr>
@@ -1001,8 +1001,8 @@ A
                                 <td>E</td>
                             </tr>
                             <tr>
-                                <td><strong>A</strong></td>
-                                <td><strong>F</strong></td>
+                                <td>E</td>
+                                <td>F</td>
                             </tr>
                             <tr>
                                 <td><strong>A</strong></td>
@@ -1065,27 +1065,27 @@ A
 
                     <p>O <strong>path compression</strong> acontece sempre que <code>find</code> é chamado. Isso inclui os <code>find</code> usados dentro de <code>union</code>, mas o botão <code>Buscar</code> ajuda a observar esse efeito de forma isolada.</p>
 
-                    <p>No exemplo do simulador, parte dessa compressão já aconteceu dentro de <code>union(H, F)</code>, quando <code>find(F)</code> percorreu <code>F → E → A</code> e atualizou <code>F → A</code>.</p>
+                    <p>No exemplo do simulador, parte dessa compressão já aconteceu dentro de <code>union(H, D)</code>, quando <code>find(D)</code> percorreu <code>D → C → A</code> e atualizou <code>D → A</code>.</p>
 
                     <p>Por exemplo, no estado atual:</p>
 
                     <ul>
-                        <li><code>find(D)</code> percorre <code>D → C → A</code></li>
-                        <li><code>find(F)</code> já é imediato: <code>F → A</code></li>
+                        <li><code>find(D)</code> já é imediato: <code>D → A</code></li>
+                        <li><code>find(F)</code> percorre <code>F → E → A</code></li>
                         <li><code>find(H)</code> percorre <code>H → G → A</code></li>
                     </ul>
 
                     <p>Depois dessas buscas, os nós visitados passam a apontar direto para A.</p>
 
-                    <h2>Depois de <code>find(D)</code></h2>
+                    <h2>Depois de <code>find(F)</code></h2>
 
                     <p>Antes:</p>
 
-                    <p><code>D → C → A</code></p>
+                    <p><code>F → E → A</code></p>
 
                     <p>Depois:</p>
 
-                    <p><code>D → A</code></p>
+                    <p><code>F → A</code></p>
 
                     <h2>Depois de <code>find(H)</code></h2>
 
