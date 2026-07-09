@@ -329,17 +329,7 @@ function renderPseudocode() {
     const mode = elements.modeSelect ? elements.modeSelect.value : 'naive';
 
     if (step === 0) {
-        // Estado inicial: exibe apenas as operações make_set
-        for (let i = 0; i < labels.length; i++) {
-            html += `<div class="pc-line pc-done">make_set(<b>${labels[i]}</b>):</div>`;
-            html += `<div class="pc-sub">parent[<b>${labels[i]}</b>] = <b>${labels[i]}</b></div>`;
-            if (mode === 'sizepc') {
-                html += `<div class="pc-sub">size[<b>${labels[i]}</b>] = <b>1</b></div>`;
-            } else if (mode === 'rankpc') {
-                html += `<div class="pc-sub">rank[<b>${labels[i]}</b>] = <b>0</b></div>`;
-            }
-            if (i < labels.length - 1) html += '<div class="pc-spacer"></div>';
-        }
+        html += renderInitialPseudocode(mode);
     } else {
         // Exibe union como cabeçalho e sub-passos internos indentados abaixo
         const history = dsu.history || [];
@@ -366,6 +356,40 @@ function renderPseudocode() {
         }
     }
     pcContent.innerHTML = html;
+}
+
+function renderInitialPseudocode(mode) {
+    if (labels.length === 0) return '';
+
+    let html = '';
+    const firstLabel = labels[0];
+    const lastLabel = labels[labels.length - 1];
+
+    html += renderMakeSetBlock(firstLabel, mode);
+
+    if (labels.length > 2) {
+        html += '<div class="pc-spacer"></div>';
+        html += '<div class="pc-line pc-done"><b>...</b></div>';
+        html += '<div class="pc-spacer"></div>';
+    }
+
+    if (labels.length > 1) {
+        html += renderMakeSetBlock(lastLabel, mode);
+    }
+
+    return html;
+}
+
+function renderMakeSetBlock(label, mode) {
+    let html = `<div class="pc-line pc-done">make_set(<b>${label}</b>):</div>`;
+    html += `<div class="pc-sub">parent[<b>${label}</b>] = <b>${label}</b></div>`;
+    if (mode === 'sizepc') {
+        html += `<div class="pc-sub">size[<b>${label}</b>] = <b>1</b></div>`;
+    } else if (mode === 'rankpc') {
+        html += `<div class="pc-sub">rank[<b>${label}</b>] = <b>0</b></div>`;
+    }
+    html += '<div class="pc-spacer"></div>';
+    return html;
 }
 
 // Percorre o vetor de pais sem modificar o DSU (uso exclusivo do painel)
