@@ -61,7 +61,7 @@ union(x, y):
 
                     <h2>1. Estado inicial</h2>
 
-                    <p>Temo-se os nós:</p>
+                    <p>Tem-se o seguinte conjunto de nós:</p>
 
                     <p><code>A, B, C, D, E, F, G, H</code></p>
 
@@ -81,7 +81,7 @@ A   B   C   D   E   F   G   H
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -196,25 +196,26 @@ A
 
                     <h2>4. Exemplo Completo Simulado</h2>
 
-                    <p>Agora como exemplo, será construído a estrutura passo a passo, seguindo a sequência de ligações:</p>
+                    <p>A seguir, a estrutura é construída passo a passo, seguindo a sequência real de chamadas de <code>union(x, y)</code> utilizada no simulador:</p>
 
                     <ul>
-                        <li><strong>B → A</strong></li>
-                        <li><strong>D → C</strong></li>
-                        <li><strong>F → E</strong></li>
-                        <li><strong>H → G</strong></li>
-                        <li><strong>C → A</strong></li>
-                        <li><strong>A → E</strong></li>
-                        <li><strong>E → G</strong></li>
+                        <li><strong>union(A, B)</strong> produz <code>B → A</code></li>
+                        <li><strong>union(C, D)</strong> produz <code>D → C</code></li>
+                        <li><strong>union(E, F)</strong> produz <code>F → E</code></li>
+                        <li><strong>union(G, H)</strong> produz <code>H → G</code></li>
+                        <li><strong>union(B, D)</strong> produz <code>C → A</code></li>
+                        <li><strong>union(F, B)</strong> produz <code>A → E</code></li>
+                        <li><strong>union(H, F)</strong> produz <code>E → G</code></li>
                     </ul>
 
-                    <p>Aqui, a seta <code>X → Y</code> significa: <strong>O pai de X passa a ser Y</strong>.</p>
+                    <p>Nesta seção, a seta <code>X → Y</code> indica que <strong>o pai de X passa a ser Y</strong>. Nos passos abaixo, o título registra a chamada de <code>union</code>, enquanto o texto destaca a aresta efetivamente alterada após a execução dos <code>find</code>.</p>
 
-                    <h2>4.1 union(B, A)</h2>
+                    <h2>4.1 union(A, B)</h2>
 
-                    <p>União: <strong>B → A</strong></p>
+                    <p>Chamada: <strong>union(A, B)</strong></p>
+                    <p>Resultado no vetor <code>parent</code>: <strong>B → A</strong></p>
 
-                    <p>Então A continua sendo raiz, e B passa a depender de A.</p>
+                    <p>Assim, A permanece como raiz do conjunto, e B passa a apontar para A.</p>
 
                     <pre><code>
 A
@@ -229,7 +230,7 @@ C   D   E   F   G   H
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -272,9 +273,10 @@ C   D   E   F   G   H
 
                     <p><code>{A,B} {C} {D} {E} {F} {G} {H}</code></p>
 
-                    <h2>4.2 union(D, C)</h2>
+                    <h2>4.2 union(C, D)</h2>
 
-                    <p>União: <strong>D → C</strong></p>
+                    <p>Chamada: <strong>union(C, D)</strong></p>
+                    <p>Resultado no vetor <code>parent</code>: <strong>D → C</strong></p>
 
                     <pre><code>
 A        C
@@ -289,7 +291,7 @@ E   F   G   H
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -332,9 +334,10 @@ E   F   G   H
 
                     <p><code>{A,B} {C,D} {E} {F} {G} {H}</code></p>
 
-                    <h2>4.3 union(F, E)</h2>
+                    <h2>4.3 union(E, F)</h2>
 
-                    <p>União: <strong>F → E</strong></p>
+                    <p>Chamada: <strong>union(E, F)</strong></p>
+                    <p>Resultado no vetor <code>parent</code>: <strong>F → E</strong></p>
 
                     <pre><code>
 A        C        E
@@ -349,7 +352,7 @@ G   H
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -392,9 +395,10 @@ G   H
 
                     <p><code>{A,B} {C,D} {E,F} {G} {H}</code></p>
 
-                    <h2>4.4 union(H, G)</h2>
+                    <h2>4.4 union(G, H)</h2>
 
-                    <p>União: <strong>H → G</strong></p>
+                    <p>Chamada: <strong>union(G, H)</strong></p>
+                    <p>Resultado no vetor <code>parent</code>: <strong>H → G</strong></p>
 
                     <pre><code>
 A        C        E        G
@@ -407,7 +411,7 @@ A        C        E        G
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -452,9 +456,9 @@ A        C        E        G
 
                     <p>Até aqui, temos quatro árvores separadas.</p>
 
-                    <h2>4.5 union(C, A)</h2>
+                    <h2>4.5 union(B, D)</h2>
 
-                    <p>Agora a união é feita para unir conjuntos que já possuem mais de um elemento.</p>
+                    <p>Neste ponto, a operação passa a unir conjuntos que já possuem mais de um elemento.</p>
 
                     <p>Tem-se:</p>
 
@@ -463,11 +467,11 @@ A        C        E        G
                         <li><code>D</code> ligado a <code>C</code></li>
                     </ul>
 
-                    <p>Ao fazer:</p>
+                    <p>No simulador, a chamada é <code>union(B, D)</code>. Como <code>find(B) = A</code> e <code>find(D) = C</code>, a atualização efetiva no vetor <code>parent</code> é:</p>
 
                     <p><strong>C → A</strong></p>
 
-                    <p>Coloca-se a árvore cuja raiz era <code>C</code> abaixo de <code>A</code>.</p>
+                    <p>Consequentemente, a árvore cuja raiz era <code>C</code> passa a ficar subordinada à raiz <code>A</code>.</p>
 
                     <p>Antes:</p>
 
@@ -497,7 +501,7 @@ G
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -540,20 +544,22 @@ G
 
                     <p><code>{A,B,C,D} {E,F} {G,H}</code></p>
 
-                    <p><strong>Obs</strong>: Um detalhe importante é que <code>D</code> continua apontando para <code>C</code>. Como
+                    <p><strong>Observação</strong>: <code>D</code> continua apontando para <code>C</code>. Como
                         <code>C</code> agora aponta para <code>A</code>, o caminho de <code>D</code> até a raiz fica:</p>
 
                     <p><code>D → C → A</code></p>
 
                     <p>Logo, <code>find(D) = A</code>.</p>
 
-                    <h2>4.6 union(A, E)</h2>
+                    <h2>4.6 union(F, B)</h2>
 
-                    <p>Agora a união é:</p>
+                    <p>A próxima chamada é:</p>
 
-                    <p><strong>A → E</strong></p>
+                    <p><strong>union(F, B)</strong></p>
 
-                    <p>Isso significa que a árvore cuja raiz era <code>A</code> passa a ficar ligada em <code>E</code>.</p>
+                    <p>Como <code>find(F) = E</code> e <code>find(B) = A</code>, a atualização efetiva no vetor <code>parent</code> é <strong>A → E</strong>.</p>
+
+                    <p>Isso significa que a árvore cuja raiz era <code>A</code> passa a ficar ligada à raiz <code>E</code>.</p>
 
                     <p>Antes:</p>
 
@@ -587,7 +593,7 @@ G
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -630,7 +636,7 @@ G
 
                     <p><code>{A,B,C,D,E,F} {G,H}</code></p>
 
-                    <p>Agora alguns caminhos até a raiz ficam assim:</p>
+                    <p>Após essa união, alguns caminhos até a raiz ficam da seguinte forma:</p>
 
                     <ul>
                         <li><code>find(B) = B → A → E</code></li>
@@ -640,11 +646,11 @@ G
 
                     <p>Todos esses nós já pertencem ao mesmo conjunto, cuja raiz é <code>E</code>.</p>
 
-                    <h2>4.7 union(E, G)</h2>
+                    <h2>4.7 union(H, F)</h2>
 
-                    <p>Por fim, é feita a união seguinte:</p>
+                    <p>Por fim, executa-se a chamada <strong>union(H, F)</strong>.</p>
 
-                    <p><strong>E → G</strong></p>
+                    <p>Como <code>find(H) = G</code> e <code>find(F) = E</code>, a atualização efetiva no vetor <code>parent</code> é <strong>E → G</strong>.</p>
 
                     <p>Então toda a árvore cuja raiz era <code>E</code> passa a ficar abaixo de <code>G</code>.</p>
 
@@ -681,7 +687,7 @@ G
                         <thead>
                             <tr>
                                 <th>Parent</th>
-                                <th>Nó Comum</th>
+                                <th>Nó</th>
                             </tr>
                         </thead>
                         <tbody>

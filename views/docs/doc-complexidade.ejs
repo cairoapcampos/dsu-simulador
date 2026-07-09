@@ -1,0 +1,204 @@
+<%- include('../components/page-top', { title: 'Complexidade da DSU', bodyClass: 'doc-body', stylesheets: ['/css/docs.css'], wrapperOpen: '<div class=\"container py-4 with-sidebar doc-page\">' }) %>
+            <div class="mb-3">
+                <a href="/documentacao" class="text-decoration-none"><i class="fa-solid fa-arrow-left"></i>
+                    Voltar para Documentação</a>
+            </div>
+
+            <div class="doc-wrap">
+                <article class="doc-article">
+
+                    <h1>Complexidade da DSU</h1>
+
+                    <p>Esta página reúne, em um só lugar, a análise de complexidade dos quatro modos do simulador de
+                        <strong>Disjoint Set Union (DSU)</strong>. O foco está nas três operações fundamentais:
+                        <code>make_set</code>, <code>find</code> e <code>union</code>.
+                    </p>
+
+                    <h2>0. Resumo</h2>
+
+                    <ul>
+                        <li><strong><code>make_set</code>:</strong> custa <code>O(1)</code> em todos os modos, pois apenas inicializa o elemento.</li>
+                        <li><strong><code>find</code>:</strong> seu custo depende diretamente da altura da árvore.</li>
+                        <li><strong><code>union</code>:</strong> em geral, seu custo é dominado pelas chamadas internas de <code>find</code>.</li>
+                        <li><strong>Melhor cenário assintótico:</strong> ocorre nos modos com <strong>Path Compression</strong> combinado com <strong>Union by Size</strong> ou <strong>Union by Rank</strong>.</li>
+                    </ul>
+
+                    <h2>1. Tabela Geral</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Modo</th>
+                                <th><code>make_set</code></th>
+                                <th><code>find</code></th>
+                                <th><code>union</code></th>
+                                <th>Complexidade final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sem otimizações</td>
+                                <td><code>O(1)</code></td>
+                                <td><code>O(n)</code> no pior caso</td>
+                                <td><code>O(n)</code> no pior caso</td>
+                                <td><code>O(n)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Somente Path Compression</td>
+                                <td><code>O(1)</code></td>
+                                <td>pior caso <code>O(n)</code>, amortizado <code>O(log n)</code></td>
+                                <td>pior caso <code>O(n)</code>, amortizado <code>O(log n)</code></td>
+                                <td><code>O(log n)</code> amortizado</td>
+                            </tr>
+                            <tr>
+                                <td>Union by Size + Path Compression</td>
+                                <td><code>O(1)</code></td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                            </tr>
+                            <tr>
+                                <td>Union by Rank + Path Compression</td>
+                                <td><code>O(1)</code></td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                                <td><code>O(&alpha;(n))</code> amortizado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>2. O Que Significa "Complexidade Final"?</h2>
+
+                    <p>A coluna <strong>Complexidade final</strong> resume o custo dominante do modo nas operações principais da
+                        estrutura. Como <code>make_set</code> é sempre constante, o comportamento assintótico da DSU é determinado
+                        principalmente por <code>find</code> e, por consequência, também por <code>union</code>.</p>
+
+                    <p>Em outras palavras:</p>
+
+                    <ul>
+                        <li>se a árvore pode ficar muito alta, <code>find</code> fica caro;</li>
+                        <li>como <code>union</code> normalmente executa dois <code>find</code>, ele herda a mesma ordem assintótica;</li>
+                        <li>logo, a complexidade final de cada modo acompanha a complexidade das buscas.</li>
+                    </ul>
+
+                    <h2>3. Complexidade de <code>make_set</code></h2>
+
+                    <p>A operação <code>make_set(x)</code> cria um conjunto unitário contendo apenas o elemento <code>x</code>.</p>
+
+                    <pre><code>
+make_set(x):
+  parent[x] = x
+  // e, dependendo do modo:
+  size[x] = 1
+  rank[x] = 0
+</code></pre>
+
+                    <p>Ela faz apenas um número constante de atribuições, portanto:</p>
+
+                    <p><strong><code>make_set = O(1)</code></strong></p>
+
+                    <p>Se a inicialização for realizada para <code>n</code> elementos, o custo total passa a ser <code>O(n)</code>.</p>
+
+                    <h2>4. Modo Sem Otimizações</h2>
+
+                    <p>Neste modo, não há nenhuma heurística para limitar o crescimento da árvore. Assim, é possível formar uma
+                        cadeia de pais muito longa.</p>
+
+                    <pre><code>
+A &larr; B &larr; C &larr; D &larr; E
+</code></pre>
+
+                    <p>Nesse caso, <code>find(E)</code> precisa percorrer quase todos os nós até alcançar a raiz. Portanto:</p>
+
+                    <ul>
+                        <li><code>find</code>: <code>O(n)</code> no pior caso;</li>
+                        <li><code>union</code>: <code>O(n)</code> no pior caso, pois depende de duas buscas.</li>
+                    </ul>
+
+                    <p>Esse é o pior comportamento entre os quatro modos do simulador.</p>
+
+                    <h2>5. Somente Path Compression</h2>
+
+                    <p>Neste modo, a árvore ainda pode crescer de forma desfavorável, pois não há <strong>Union by Size</strong> nem
+                        <strong>Union by Rank</strong>. No entanto, sempre que <code>find</code> percorre um caminho, ele tenta
+                        "achatar" a estrutura, fazendo os nós visitados apontarem diretamente para a raiz.</p>
+
+                    <p>Consequência:</p>
+
+                    <ul>
+                        <li>uma operação isolada ainda pode custar <code>O(n)</code>;</li>
+                        <li>porém, ao longo de muitas operações, a árvore tende a ficar mais rasa;</li>
+                        <li>por isso a análise mais adequada é <strong>amortizada</strong>.</li>
+                    </ul>
+
+                    <p>Assim, considera-se:</p>
+
+                    <ul>
+                        <li><code>find</code>: pior caso <code>O(n)</code>, amortizado <code>O(log n)</code>;</li>
+                        <li><code>union</code>: pior caso <code>O(n)</code>, amortizado <code>O(log n)</code>.</li>
+                    </ul>
+
+                    <h2>6. Union by Size + Path Compression</h2>
+
+                    <p>Quando se usa <strong>Union by Size</strong>, o conjunto menor sempre é ligado ao conjunto maior. Isso
+                        impede que a altura cresça rapidamente.</p>
+
+                    <p>A ideia central é a seguinte: toda vez que um nó desce um nível, ele passa a pertencer a um conjunto cujo
+                        tamanho, no mínimo, dobrou. Como isso não pode acontecer indefinidamente, a altura fica controlada.</p>
+
+                    <p>Sem Path Compression, essa heurística já limita a altura a <code>O(log n)</code>. Com Path Compression, o
+                        desempenho melhora ainda mais e obtém-se:</p>
+
+                    <p><strong><code>find = O(&alpha;(n))</code> amortizado</strong></p>
+
+                    <p>Como <code>union</code> depende de <code>find</code>, tem-se também:</p>
+
+                    <p><strong><code>union = O(&alpha;(n))</code> amortizado</strong></p>
+
+                    <h2>7. Union by Rank + Path Compression</h2>
+
+                    <p>Neste modo, em vez do tamanho do conjunto, considera-se o <strong>rank</strong>, que aproxima a altura da árvore.
+                        A raiz com menor rank fica abaixo da raiz com maior rank. Quando há empate, escolhe-se uma nova raiz e seu
+                        rank é incrementado.</p>
+
+                    <p>Essa heurística também evita crescimento descontrolado da altura. Sem Path Compression, já se obtém altura
+                        limitada por <code>O(log n)</code>. Com Path Compression, chega-se ao mesmo resultado assintótico do modo
+                        anterior:</p>
+
+                    <p><strong><code>find = O(&alpha;(n))</code> amortizado</strong></p>
+
+                    <p>e, consequentemente:</p>
+
+                    <p><strong><code>union = O(&alpha;(n))</code> amortizado</strong></p>
+
+                    <h2>8. O Que É <code>&alpha;(n)</code>?</h2>
+
+                    <p>O símbolo <code>&alpha;(n)</code> representa a <strong>função inversa de Ackermann</strong>. Ela cresce
+                        extremamente devagar. Para valores de <code>n</code> encontrados em aplicações práticas, seu valor é muito
+                        pequeno.</p>
+
+                    <p>Na prática, isso significa que os modos:</p>
+
+                    <ul>
+                        <li><strong>Union by Size + Path Compression</strong></li>
+                        <li><strong>Union by Rank + Path Compression</strong></li>
+                    </ul>
+
+                    <p>apresentam custo quase constante por operação, embora a notação assintótica correta seja
+                        <code>O(&alpha;(n))</code> amortizado.</p>
+
+                    <h2>9. Conclusão</h2>
+
+                    <ul>
+                        <li><strong>Sem otimizações:</strong> pior caso linear, pois a árvore pode virar uma cadeia.</li>
+                        <li><strong>Somente Path Compression:</strong> melhora o custo médio, mas ainda admite operações isoladas caras.</li>
+                        <li><strong>Union by Size + Path Compression:</strong> oferece a melhor complexidade assintótica do simulador.</li>
+                        <li><strong>Union by Rank + Path Compression:</strong> oferece a mesma complexidade assintótica do modo anterior.</li>
+                    </ul>
+
+                    <p>Assim, do ponto de vista teórico e prático, os dois modos mais eficientes são aqueles que combinam uma
+                        heurística de união (<strong>size</strong> ou <strong>rank</strong>) com <strong>Path Compression</strong>.</p>
+
+                </article>
+            </div>
+<%- include('../components/page-bottom', { wrapperClose: '</div>' }) %>

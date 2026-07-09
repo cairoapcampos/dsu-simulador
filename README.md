@@ -2,7 +2,7 @@
 
 Aplicação Web educacional para visualizar, passo a passo, o funcionamento da estrutura de dados **Disjoint Set Union (DSU)**, também conhecida como **Union-Find**.
 
-O projeto mostra como os conjuntos são unidos, como o vetor `parent` é atualizado e como a operação `find` atua nos modos com **Path Compression**.
+O projeto mostra como os conjuntos são unidos, como o vetor `parent` é atualizado e como a operação `find` atua nos modos com **Path Compression**, tanto durante as uniões quanto na busca visual manual.
 
 ![Demonstração do sistema](docs/imagem.png)
 
@@ -61,9 +61,9 @@ Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 | Modo | O que demonstra |
 |---|---|
 | Modo Ingênuo (Sem Otimizações) | União simples, sem heurística de otimização |
-| Somente Path Compression | Compressão de caminho no `find`, sem Union by Size/Rank |
-| Union by Size + Path Compression | União pelo tamanho do conjunto e compressão de caminho no `find` |
-| Union by Rank + Path Compression | União pelo rank da raiz e compressão de caminho no `find` |
+| Somente Path Compression | Compressão de caminho no `find`, sem Union by Size/Rank; no simulador, ela pode ocorrer dentro de `union` e também no botão `Buscar` |
+| Union by Size + Path Compression | União pelo tamanho do conjunto e compressão de caminho sempre que `find` é chamado |
+| Union by Rank + Path Compression | União pelo rank da raiz e compressão de caminho sempre que `find` é chamado |
 
 ## Tecnologias utilizadas
 
@@ -92,7 +92,8 @@ Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 - O arquivo `dsu-visual.js` transforma o estado atual do DSU em grafo, tabela e explicação textual.
 - O grafo mostra cada nó apontando para seu `parent`.
 - A tabela mostra o vetor `parent` e, nos modos otimizados, mostra `rank` ou `size` apenas nas raízes.
-- Nos modos com Path Compression, a busca pode ser avançada passo a passo para mostrar cada atualização do vetor `parent`.
+- Nos modos com Path Compression, a compressão pode acontecer durante `union`, pois o algoritmo chama `find` internamente.
+- Nos modos com Path Compression, a busca manual pode ser avançada passo a passo para mostrar cada atualização do vetor `parent` de forma isolada.
 
 ## Conceitos demonstrados
 
@@ -102,7 +103,7 @@ Link do vídeo de demonstração: `https://www.youtube.com/watch?v=Roj-6bYSoOY`
 - **Union**: operação que une dois conjuntos.
 - **Union by Size**: mantém árvores menores ligadas a árvores maiores.
 - **Union by Rank**: usa uma estimativa de altura para manter árvores mais rasas.
-- **Path Compression**: após uma busca, faz os nós do caminho apontarem diretamente para a raiz.
+- **Path Compression**: sempre que `find` percorre um caminho, faz os nós visitados apontarem diretamente para a raiz.
 
 ## Pré-requisitos
 

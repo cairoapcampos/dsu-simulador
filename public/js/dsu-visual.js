@@ -169,17 +169,17 @@ export function renderStatus(labels, parent, unions, step, containerId = 'status
     if (expDiv) expDiv.innerHTML = explicacao;
 }
 
-	function renderStatusTable(labels, parent, boldIdx, rank, sizeArray) {
-	    const metadata = rank || sizeArray;
-	    const metadataLabel = rank ? 'Rank (raízes)' : 'Size (raízes)';
-	    let table = '<table class="status-table">';
-	    table += renderRow('Parent', parent.map(parentIdx => labels[parentIdx]), boldIdx);
-	    table += renderRow('Nó Comum', labels, boldIdx);
+function renderStatusTable(labels, parent, boldIdx, rank, sizeArray) {
+    const metadata = rank || sizeArray;
+    const metadataLabel = rank ? 'Rank (raízes)' : 'Size (raízes)';
+    let table = '<table class="status-table">';
+    table += renderRow('Parent', parent.map(parentIdx => labels[parentIdx]), boldIdx);
+    table += renderRow('Nó Comum', labels, boldIdx);
 
-	    if (metadata) {
-	        table += renderRow(metadataLabel, metadata.map((value, idx) => parent[idx] === idx ? value : '-'), boldIdx);
-	    }
-	    table += '</table>';
+    if (metadata) {
+        table += renderRow(metadataLabel, metadata.map((value, idx) => parent[idx] === idx ? value : '-'), boldIdx);
+    }
+    table += '</table>';
     return table;
 }
 
@@ -196,8 +196,10 @@ function renderStepExplanation(labels, parent, unions, step, boldIdx, previousPa
     const repParent = previousParent || parent;
     const uRep = getRoot(repParent, u);
     const vRep = getRoot(repParent, v);
+    const pathU = getPathTo(repParent, u).map(i => labels[i]).join(' → ');
+    const pathV = getPathTo(repParent, v).map(i => labels[i]).join(' → ');
     if (boldIdx.length === 0) {
-        return `Nenhuma alteração: ${labels[vRep]} já estava no conjunto de ${labels[uRep]}.`;
+        return `Nenhuma alteração: <b>${labels[u]}</b> e <b>${labels[v]}</b> já pertencem ao mesmo conjunto (raiz: <b>${labels[uRep]}</b>).`;
     }
 
     const changes = boldIdx
@@ -206,7 +208,7 @@ function renderStepExplanation(labels, parent, unions, step, boldIdx, previousPa
     const root = getRoot(parent, uRep);
 
     return [
-        `Após unir <b>${labels[uRep]}</b> e <b>${labels[vRep]}</b>, parent atualizado: ${changes}.`,
+        `union(<b>${labels[u]}</b>, <b>${labels[v]}</b>): find(<b>${labels[u]}</b>): ${pathU}, find(<b>${labels[v]}</b>): ${pathV} — parent atualizado: ${changes}.`,
         `Conjunto resultante: {${getSetMembers(labels, parent, root)}}.`
     ].join('<br>');
 }
@@ -244,4 +246,15 @@ function getRoot(parent, idx) {
     let root = idx;
     while (parent[root] !== root) root = parent[root];
     return root;
+}
+
+function getPathTo(parent, start) {
+    const path = [];
+    let curr = start;
+    while (parent[curr] !== curr) {
+        path.push(curr);
+        curr = parent[curr];
+    }
+    path.push(curr);
+    return path;
 }

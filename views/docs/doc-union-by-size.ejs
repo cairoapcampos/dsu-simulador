@@ -9,8 +9,8 @@
 
                     <h1>Union by Size + Path Compression</h1>
 
-                    <p>No exemplo sem otimização, pode-se escolher livremente quem virava pai.</p>
-                    <p>Com <strong>Union by Size</strong>, isso <strong>não é mais livre</strong>: o conjunto menor deve ficar abaixo do maior.
+                    <p>No exemplo sem otimização, pode-se escolher livremente qual raiz passaria a ser pai.</p>
+                    <p>Com <strong>Union by Size</strong>, essa escolha <strong>deixa de ser livre</strong>: o conjunto menor deve ficar abaixo do maior.
                         Além disso, com <strong>Path Compression</strong>, quando é feito <code>find(x)</code>, os nós visitados passam a apontar
                         direto para a raiz.</p>
 
@@ -20,6 +20,7 @@
                         <li><strong>Union by Size:</strong> liga a raiz do conjunto menor na raiz do conjunto maior.</li>
                         <li><strong>size[raiz]:</strong> armazena a quantidade de elementos do conjunto (apenas nas raízes).</li>
                         <li><strong>Path Compression:</strong> achata caminhos durante <code>find</code>, acelerando buscas futuras.</li>
+                        <li><strong>No simulador:</strong> a compressão pode ocorrer tanto nos <code>find</code> usados dentro de <code>union</code> quanto no botão <code>Buscar (find)</code>.</li>
                     </ul>
 
                     <h2>1. Algoritmos (pseudocódigo)</h2>
@@ -64,7 +65,7 @@ union(x, y):  // union by size
 
                     <p><strong>Regras Adotadas</strong></p>
 
-                    <p>Considere a Operação:</p>
+                    <p>Considere a operação:</p>
 
                     <p><code>union(x, y)</code></p>
 
@@ -87,7 +88,7 @@ union(x, y):  // union by size
 
                     <p><code>parent[rx] = ry</code></p>
 
-                    <p><strong>Obs:</strong> Isso é só uma convenção. Outra implementação poderia escolher o contrário.</p>
+                    <p><strong>Observação:</strong> essa é apenas uma convenção. Outra implementação poderia adotar a escolha oposta.</p>
 
                     <h2>1. Estado Inicial</h2>
 
@@ -104,7 +105,7 @@ A   B   C   D   E   F   G   H
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -195,7 +196,7 @@ A   B   C   D   E   F   G   H
 
                     <h2>2.1 union(B, A)</h2>
 
-                    <p>Tem-se:</p>
+                    <p>Tem-se a seguinte situação inicial:</p>
 
                     <ul>
                         <li><code>find(B) = B</code></li>
@@ -217,7 +218,7 @@ C   D   E   F   G   H
                     <p>Tamanhos:</p>
 
                     <ul>
-                        <li>Conjunto de A agora tem tamanho 2</li>
+                        <li>O conjunto cuja raiz é A passa a ter tamanho 2</li>
                     </ul>
 
 	                    <p>Tabelas:</p>
@@ -227,7 +228,7 @@ C   D   E   F   G   H
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -345,7 +346,7 @@ E   F   G   H
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -462,7 +463,7 @@ G   H
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -577,7 +578,7 @@ A        C        E        G
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -664,24 +665,24 @@ A        C        E        G
 	                        </div>
 	                    </div>
 
-                    <h2>2.5 union(C, A)</h2>
+                    <h2>2.5 union(D, B)</h2>
 
-                    <p>Agora tem-se dois conjuntos:</p>
+                    <p>Neste ponto, têm-se dois conjuntos:</p>
 
                     <ul>
-                        <li>Conjunto de C: <code>{C, D}</code> com tamanho 2</li>
-                        <li>Conjunto de A: <code>{A, B}</code> com tamanho 2</li>
+                        <li><code>find(D) = C</code>, então D pertence ao conjunto <code>{C, D}</code> com tamanho 2</li>
+                        <li><code>find(B) = A</code>, então B pertence ao conjunto <code>{A, B}</code> com tamanho 2</li>
                     </ul>
 
-                    <p>Calculando:</p>
+                    <p>Ao calcular os representantes:</p>
 
                     <ul>
-                        <li><code>find(C) = C</code></li>
-                        <li><code>find(A) = A</code></li>
+                        <li><code>find(D)</code> retorna a raiz <code>C</code></li>
+                        <li><code>find(B)</code> retorna a raiz <code>A</code></li>
                     </ul>
 
                     <p>Empate de tamanho 2 e 2.</p>
-                    <p>Pela regra de empate, <strong>C fica abaixo de A</strong>.</p>
+                    <p>Pela regra de empate, a raiz do primeiro argumento fica abaixo da raiz do segundo. Portanto, <strong>C fica abaixo de A</strong>.</p>
 
                     <p>Resultado:</p>
 
@@ -705,7 +706,7 @@ G
                     </ul>
 
                     <p>D ainda aponta para C.</p>
-                    <p>Isso é normal. O <code>find(D)</code> ainda faria:</p>
+                    <p>Isso é esperado. Portanto, <code>find(D)</code> ainda percorreria:</p>
 
                     <p><code>D → C → A</code></p>
 
@@ -716,7 +717,7 @@ G
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -803,18 +804,18 @@ G
 	                        </div>
 	                    </div>
 
-                    <h2>2.6 union(E, A)</h2>
+                    <h2>2.6 union(F, B)</h2>
 
                     <ul>
-                        <li><code>find(A) = A</code>, com tamanho 4</li>
-                        <li><code>find(E) = E</code>, com tamanho 2</li>
+                        <li><code>find(F) = E</code>, com tamanho 2</li>
+                        <li><code>find(B) = A</code>, com tamanho 4</li>
                     </ul>
 
-                    <p>Como o conjunto de A é maior, <strong>o menor deve ficar abaixo do maior</strong>.</p>
+                    <p>Como o conjunto cuja raiz é A é maior, <strong>o conjunto menor deve ficar abaixo do maior</strong>.</p>
 
-                    <p>Então o correto agora é:</p>
+                    <p>No simulador, a chamada é <code>union(F, B)</code>. Como <code>find(F)</code> retorna <code>E</code> e <code>find(B)</code> retorna <code>A</code>, a comparação efetiva ocorre entre esses dois representantes.</p>
 
-                    <p><strong>E fica abaixo de A</strong> e não A abaixo de E.</p>
+                    <p><strong>E fica abaixo de A</strong>.</p>
 
                     <p>Resultado:</p>
 
@@ -843,7 +844,7 @@ G
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -930,37 +931,38 @@ G
 	                        </div>
 	                    </div>
 
-                    <h1>2.7 union(G, A)</h1>
+                    <h1>2.7 union(H, F)</h1>
 
-                    <p>Agora precisa-se tomar cuidado com o <code>find(E)</code>, porque E já não é mais raiz.</p>
+                    <p>Agora precisa-se tomar cuidado com o <code>find(F)</code>, porque F já não é mais raiz.</p>
 
                     <p>Tem-se:</p>
 
                     <ul>
-                        <li><code>E → A</code></li>
+                        <li><code>F → E → A</code></li>
                     </ul>
 
                     <p>Então:</p>
 
                     <ul>
-                        <li><code>find(E)</code> percorre <code>E → A</code></li>
-                        <li>raiz de E é <strong>A</strong></li>
+                        <li><code>find(F)</code> percorre <code>F → E → A</code></li>
+                        <li>raiz de F é <strong>A</strong></li>
                     </ul>
 
-                    <p>Como há <strong>Path Compression</strong>, depois desse <code>find</code>, E continua apontando diretamente para A, o
-                        que já acontecia.</p>
+                    <p>Como há <strong>Path Compression</strong>, depois desse <code>find</code>, <code>F</code> passa a apontar diretamente para <code>A</code>.</p>
 
-                    <p>Para G:</p>
+                    <p>Para H:</p>
 
                     <ul>
-                        <li><code>find(G) = G</code></li>
+                        <li><code>find(H) = G</code></li>
                     </ul>
+
+                    <p>No simulador, a chamada é <code>union(H, F)</code>. Como <code>find(H)</code> retorna a raiz <code>G</code> e <code>find(F)</code> retorna a raiz <code>A</code>, a comparação efetiva passa a ser entre os conjuntos cujas raízes são <code>G</code> e <code>A</code>.</p>
 
                     <p>Agora compara-se os tamanhos:</p>
 
                     <ul>
-                        <li>Raiz A tem tamanho 6</li>
-                        <li>Raiz G tem tamanho 2</li>
+                        <li>Raiz de <code>F</code> é <code>A</code>, com tamanho 6</li>
+                        <li>Raiz de <code>G</code> é <code>G</code>, com tamanho 2</li>
                     </ul>
 
                     <p>Logo, o menor conjunto fica abaixo do maior:</p>
@@ -975,7 +977,7 @@ A
 ├── C
 │   └── D
 ├── E
-│   └── F
+├── F
 └── G
     └── H
 </code></pre>
@@ -993,7 +995,7 @@ A
 	                        <thead>
 	                            <tr>
 	                                <th>Parent</th>
-	                                <th>Nó Comum</th>
+	                                <th>Nó</th>
 	                                <th></th>
                             </tr>
                         </thead>
@@ -1019,8 +1021,8 @@ A
                                 <td>E</td>
                             </tr>
                             <tr>
-                                <td>E</td>
-                                <td>F</td>
+                                <td><strong>A</strong></td>
+                                <td><strong>F</strong></td>
                             </tr>
                             <tr>
                                 <td><strong>A</strong></td>
@@ -1084,7 +1086,7 @@ A
 
                     <ul>
                         <li><code>find(D)</code> ainda seria <code>D → C → A</code></li>
-                        <li><code>find(F)</code> ainda seria <code>F → E → A</code></li>
+                        <li><code>find(F)</code> agora já é <code>F → A</code>, pois foi comprimido durante <code>union(H, F)</code></li>
                         <li><code>find(H)</code> ainda seria <code>H → G → A</code></li>
                     </ul>
 
@@ -1092,13 +1094,14 @@ A
 
                     <h1>3. Onde entra o Path Compression de verdade?</h1>
 
-                    <p>O <strong>Path Compression</strong> aparece quando se faz buscas.</p>
+                    <p>O <strong>Path Compression</strong> acontece sempre que <code>find</code> é chamado. Isso inclui os <code>find</code> usados dentro de <code>union</code>, mas o botão <code>Buscar</code> ajuda a observar esse efeito de forma isolada.</p>
+
+                    <p>No exemplo do simulador, parte dessa compressão já aconteceu dentro de <code>union(H, F)</code>, quando <code>find(F)</code> percorreu <code>F → E → A</code> e atualizou <code>F → A</code>. Ainda assim, o botão <code>Buscar</code> continua útil para mostrar outras compressões restantes.</p>
 
                     <p>Por exemplo, se for feito o seguinte:</p>
 
                     <ul>
                         <li><code>find(D)</code></li>
-                        <li><code>find(F)</code></li>
                         <li><code>find(H)</code></li>
                     </ul>
 
@@ -1113,16 +1116,6 @@ A
                     <p>Depois do <code>find(D)</code>, D passa a apontar direto para A:</p>
 
                     <p><code>D → A</code></p>
-
-                    <h2>find(F)</h2>
-
-                    <p>Antes:</p>
-
-                    <p><code>F → E → A</code></p>
-
-                    <p>Depois:</p>
-
-                    <p><code>F → A</code></p>
 
                     <h2>find(H)</h2>
 

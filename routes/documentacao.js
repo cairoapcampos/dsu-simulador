@@ -21,4 +21,8 @@ router.get('/union-by-rank-path-compression', (req, res) => {
   res.render('docs/doc-union-by-rank');
 });
 
+router.get('/complexidade', (req, res) => {
+  res.render('docs/doc-complexidade');
+});
+
 module.exports = router;

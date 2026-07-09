@@ -16,24 +16,25 @@ import { createGraph, renderGraph, renderStatus, renderParentSizeTable, renderEl
 // Modos originais (8 nós)
 const baseLabels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const defaultUnions = [
-    [0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [4, 0], [6, 4]
+    [0, 1], [2, 3], [4, 5], [6, 7], [1, 3], [5, 1], [7, 5]
 ];
-// Ordem e direção conforme especificação e regra de empate:
+// Ordem escolhida para preservar fidelidade algorítmica:
+// os passos finais usam nós comuns/folhas, e o find descobre as raízes.
 // union(B, A) => [1, 0]
 // union(D, C) => [3, 2]
 // union(F, E) => [5, 4]
 // union(H, G) => [7, 6]
-// union(C, A) => [2, 0]
-// union(A, E) => [0, 4]
-// union(E, G) => [4, 6]
+// union(D, B) => [3, 1]
+// union(F, B) => [5, 1]
+// union(H, F) => [7, 5]
 const optimizedUnions = [
     [1, 0], // B, A
     [3, 2], // D, C
     [5, 4], // F, E
     [7, 6], // H, G
-    [2, 0], // C, A
-    [0, 4], // A, E
-    [4, 6]  // E, G
+    [3, 1], // D, B
+    [5, 1], // F, B
+    [7, 5]  // H, F
 ];
 let labels = baseLabels;
 let unions = defaultUnions;
@@ -315,6 +316,135 @@ function updateAll(previousParentOverride = null, previousSizeOverride = null) {
             parentSizeDiv.innerHTML = '';
         }
     }
+
+    renderPseudocode();
+}
+
+// Atualiza o painel de pseudocódigo com o estado atual das operações
+function renderPseudocode() {
+    const pcContent = document.getElementById('pc-content');
+    if (!pcContent) return;
+
+    let html = '';
+    const mode = elements.modeSelect ? elements.modeSelect.value : 'naive';
+
+    if (step === 0) {
+        // Estado inicial: exibe apenas as operações make_set
+        for (let i = 0; i < labels.length; i++) {
+            html += `<div class="pc-line pc-done">make_set(<b>${labels[i]}</b>):</div>`;
+            html += `<div class="pc-sub">parent[<b>${labels[i]}</b>] = <b>${labels[i]}</b></div>`;
+            if (mode === 'sizepc') {
+                html += `<div class="pc-sub">size[<b>${labels[i]}</b>] = <b>1</b></div>`;
+            } else if (mode === 'rankpc') {
+                html += `<div class="pc-sub">rank[<b>${labels[i]}</b>] = <b>0</b></div>`;
+            }
+            if (i < labels.length - 1) html += '<div class="pc-spacer"></div>';
+        }
+    } else {
+        // Exibe union como cabeçalho e sub-passos internos indentados abaixo
+        const history = dsu.history || [];
+        const i = step - 1;
+        const [u, v] = unions[i];
+        const previousState = history[step - 1];
+        const currentState = history[step];
+        const parentBefore = getParentState(previousState);
+        const parentAfter = getParentState(currentState);
+        const rootU = pcGetRoot(parentBefore, u);
+        const rootV = pcGetRoot(parentBefore, v);
+
+        if (mode === 'sizepc') {
+            html += renderSizePseudocodeStep(u, v, rootU, rootV, previousState, currentState);
+        } else if (mode === 'rankpc') {
+            html += renderRankPseudocodeStep(u, v, rootU, rootV, previousState, currentState);
+        } else {
+            html += renderBasicPseudocodeStep(u, v, rootU, rootV, parentAfter);
+        }
+
+        if (step >= unions.length) {
+            html += '<div class="pc-separator"></div>';
+            html += '<div class="pc-line pc-done" style="font-style:italic;font-size:0.82em;">// concluído</div>';
+        }
+    }
+    pcContent.innerHTML = html;
+}
+
+// Percorre o vetor de pais sem modificar o DSU (uso exclusivo do painel)
+function pcGetRoot(parent, x) {
+    while (parent[x] !== x) x = parent[x];
+    return x;
+}
+
+function getParentState(state) {
+    return Array.isArray(state) ? state : state.parent;
+}
+
+function renderBasicPseudocodeStep(u, v, rootU, rootV, parentAfter) {
+    let html = '';
+    html += `<div class="pc-line pc-current">union(<b>${labels[u]}</b>, <b>${labels[v]}</b>):</div>`;
+    html += `<div class="pc-sub">rx = find(<b>${labels[u]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootU]}</b></span></div>`;
+    html += `<div class="pc-sub">ry = find(<b>${labels[v]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootV]}</b></span></div>`;
+    if (rootU === rootV) {
+        html += '<div class="pc-sub pc-sub-note">rx = ry (mesmo conjunto)</div>';
+        return html;
+    }
+
+    html += '<div class="pc-sub">se rx ≠ ry:</div>';
+    if (parentAfter && parentAfter[rootV] !== rootV) {
+        html += `<div class="pc-sub pc-sub-nested">parent[<b>${labels[rootV]}</b>] = <b>${labels[rootU]}</b></div>`;
+    } else if (parentAfter && parentAfter[rootU] !== rootU) {
+        html += `<div class="pc-sub pc-sub-nested">parent[<b>${labels[rootU]}</b>] = <b>${labels[rootV]}</b></div>`;
+    }
+    return html;
+}
+
+function renderSizePseudocodeStep(u, v, rootU, rootV, previousState, currentState) {
+    const prevSize = previousState && !Array.isArray(previousState) ? previousState.sizeArr : null;
+    const currSize = currentState && !Array.isArray(currentState) ? currentState.sizeArr : null;
+    const sizeU = prevSize ? prevSize[rootU] : null;
+    const sizeV = prevSize ? prevSize[rootV] : null;
+    const attachedUToV = rootU !== rootV && getParentState(currentState)[rootU] === rootV;
+    const attachedVToU = rootU !== rootV && getParentState(currentState)[rootV] === rootU;
+
+    let html = '';
+    html += `<div class="pc-line pc-current">union(<b>${labels[u]}</b>, <b>${labels[v]}</b>):</div>`;
+    html += `<div class="pc-sub">rx = find(<b>${labels[u]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootU]}</b></span></div>`;
+    html += `<div class="pc-sub">ry = find(<b>${labels[v]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootV]}</b></span></div>`;
+    html += `<div class="pc-sub">${rootU === rootV ? 'se rx == ry: retorna' : 'se rx == ry: retorna  <span class="pc-comment">#não</span>'}</div>`;
+    if (rootU === rootV) return html;
+
+    html += `<div class="pc-sub ${sizeU < sizeV ? 'pc-current' : ''}">se size[rx] &lt; size[ry]:  <span class="pc-comment">#${sizeU} &lt; ${sizeV}</span></div>`;
+    html += `<div class="pc-sub pc-sub-nested ${attachedUToV ? 'pc-current' : ''}">parent[rx] = ry</div>`;
+    html += `<div class="pc-sub pc-sub-nested ${attachedUToV ? 'pc-current' : ''}">size[ry] += size[rx]${attachedUToV && currSize ? `  <span class="pc-comment">#${currSize[rootV]}</span>` : ''}</div>`;
+    html += `<div class="pc-sub ${sizeU >= sizeV ? 'pc-current' : ''}">senão:</div>`;
+    html += `<div class="pc-sub pc-sub-nested ${attachedVToU ? 'pc-current' : ''}">parent[ry] = rx</div>`;
+    html += `<div class="pc-sub pc-sub-nested ${attachedVToU ? 'pc-current' : ''}">size[rx] += size[ry]${attachedVToU && currSize ? `  <span class="pc-comment">#${currSize[rootU]}</span>` : ''}</div>`;
+    return html;
+}
+
+function renderRankPseudocodeStep(u, v, rootU, rootV, previousState, currentState) {
+    const prevRank = previousState && !Array.isArray(previousState) ? previousState.rank : null;
+    const currRank = currentState && !Array.isArray(currentState) ? currentState.rank : null;
+    const rankU = prevRank ? prevRank[rootU] : null;
+    const rankV = prevRank ? prevRank[rootV] : null;
+    const currentParent = getParentState(currentState);
+    const attachedUToV = rootU !== rootV && currentParent[rootU] === rootV;
+    const equalRank = rootU !== rootV && rankU === rankV;
+
+    let html = '';
+    html += `<div class="pc-line pc-current">union(<b>${labels[u]}</b>, <b>${labels[v]}</b>):</div>`;
+    html += `<div class="pc-sub">rx = find(<b>${labels[u]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootU]}</b></span></div>`;
+    html += `<div class="pc-sub">ry = find(<b>${labels[v]}</b>)  <span class="pc-comment">#Parent <b>${labels[rootV]}</b></span></div>`;
+    html += `<div class="pc-sub">${rootU === rootV ? 'se rx == ry: retorna' : 'se rx == ry: retorna  <span class="pc-comment">#não</span>'}</div>`;
+    if (rootU === rootV) return html;
+
+    html += `<div class="pc-sub ${rankU < rankV ? 'pc-current' : ''}">se rank[rx] &lt; rank[ry]:  <span class="pc-comment">#${rankU} &lt; ${rankV}</span></div>`;
+    html += `<div class="pc-sub pc-sub-nested ${rankU < rankV ? 'pc-current' : ''}">parent[rx] = ry</div>`;
+    html += `<div class="pc-sub ${rankU > rankV ? 'pc-current' : ''}">senão se rank[rx] &gt; rank[ry]:  <span class="pc-comment">#${rankU} &gt; ${rankV}</span></div>`;
+    html += `<div class="pc-sub pc-sub-nested ${rankU > rankV ? 'pc-current' : ''}">parent[ry] = rx</div>`;
+    html += `<div class="pc-sub ${equalRank ? 'pc-current' : ''}">senão:</div>`;
+    html += `<div class="pc-sub pc-sub-nested ${equalRank && attachedUToV ? 'pc-current' : ''}">parent[rx] = ry</div>`;
+    html += `<div class="pc-sub pc-sub-nested ${equalRank && attachedUToV ? 'pc-current' : ''}">rank[ry]++${equalRank && attachedUToV && currRank ? `  <span class="pc-comment">#${currRank[rootV]}</span>` : ''}</div>`;
+    return html;
 }
 
 // Troca o modo do DSU conforme o drop-down
